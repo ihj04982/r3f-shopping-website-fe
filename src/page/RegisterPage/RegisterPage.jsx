@@ -10,7 +10,8 @@ import {
   Typography,
   FormControlLabel,
   Checkbox,
-  FormHelperText
+  FormHelperText,
+  Paper
 } from "@mui/material";
 import { registerUser } from "../../features/user/userSlice";
 
@@ -57,25 +58,15 @@ const RegisterPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        bgcolor: 'background.paper',
-        p: 4,
-        borderRadius: 2,
-        boxShadow: 1,
-        border: 1,
-        borderColor: 'divider'
-      }}>
+    <Container maxWidth="sm" sx={{ py: 6 }}>
+      <Paper elevation={0} sx={{ width: '100%', p: 4 }}>
         {registrationError && (
-          <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
+          <Alert severity="error" sx={{ mb: 3, width: '100%' }}>
             {registrationError}
           </Alert>
         )}
 
-        <Typography variant="h4" component="h1" sx={{ mb: 3, fontWeight: 'bold' }}>
+        <Typography variant="h3" component="h1" sx={{ mb: 4, textAlign: 'center' }}>
           회원가입
         </Typography>
 
@@ -89,7 +80,7 @@ const RegisterPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
             variant="outlined"
           />
 
@@ -102,7 +93,7 @@ const RegisterPage = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
             variant="outlined"
           />
 
@@ -115,7 +106,7 @@ const RegisterPage = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
             variant="outlined"
           />
 
@@ -130,7 +121,7 @@ const RegisterPage = () => {
             required
             error={!!passwordError}
             helperText={passwordError}
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
             variant="outlined"
           />
 
@@ -140,7 +131,6 @@ const RegisterPage = () => {
                 id="policy"
                 checked={formData.policy}
                 onChange={handleChange}
-                color="primary"
               />
             }
             label="이용약관에 동의합니다"
@@ -156,15 +146,14 @@ const RegisterPage = () => {
           <Button
             variant="contained"
             type="submit"
-            color="primary"
             size="large"
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mt: 3 }}
           >
             회원가입
           </Button>
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
 };

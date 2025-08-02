@@ -6,8 +6,8 @@ const BACKEND_PROXY = import.meta.env.VITE_BACKEND_PROXY;
 
 console.log("proxy", BACKEND_PROXY);
 const api = axios.create({
-  // baseURL: LOCAL_BACKEND,
-  baseURL: PROD_BACKEND,
+  baseURL: LOCAL_BACKEND,
+  // baseURL: PROD_BACKEND,
   headers: {
     "Content-Type": "application/json",
     authorization: `Bearer ${sessionStorage.getItem("token")}`,

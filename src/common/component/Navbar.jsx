@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
-  Typography,
   Button,
   IconButton,
   Box,
@@ -13,6 +12,8 @@ import {
   TextField,
   InputAdornment,
   Badge,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import {
   Person as PersonIcon,
@@ -21,6 +22,7 @@ import {
   ShoppingBag as ShoppingBagIcon,
   Inventory as InventoryIcon,
   Close as CloseIcon,
+  DeviceHub,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -29,8 +31,9 @@ import { logout } from "../../features/user/userSlice";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { cartItemCount } = useSelector((state) => state.cart);
-  const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -76,40 +79,6 @@ const Navbar = ({ user }) => {
 
   return (
     <Box>
-      {showSearchBox && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            p: 2,
-            bgcolor: "background.paper",
-            borderBottom: 1,
-            borderColor: "divider",
-          }}
-        >
-          <TextField
-            fullWidth
-            placeholder="제품검색"
-            value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
-            onKeyPress={onCheckEnter}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="outlined"
-            size="small"
-          />
-          <IconButton onClick={() => setShowSearchBox(false)}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-      )}
-
       <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
         {drawerList()}
       </Drawer>
@@ -132,7 +101,7 @@ const Navbar = ({ user }) => {
 
           <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
+              <DeviceHub sx={{ fontSize: 40 }} />
             </Link>
           </Box>
 
@@ -166,14 +135,52 @@ const Navbar = ({ user }) => {
         </Toolbar>
       </AppBar>
 
+      {/* Mobile Search Box - appears below navbar */}
+      {isMobile && showSearchBox && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            p: 2,
+            bgcolor: "background.paper",
+            borderBottom: 1,
+            borderColor: "divider",
+          }}
+        >
+          <TextField
+            fullWidth
+            placeholder="제품검색"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyPress={onCheckEnter}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+            variant="outlined"
+            size="small"
+            autoFocus
+          />
+          <IconButton onClick={() => setShowSearchBox(false)} sx={{ ml: 1 }}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      )}
+
       <Box
         sx={{
-          display: "flex",
+          display: { xs: 'none', md: 'flex' },
           justifyContent: "space-between",
           alignItems: "center",
           px: 2,
           py: 1,
           bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
         }}
       >
         <Box component="nav">
@@ -197,22 +204,20 @@ const Navbar = ({ user }) => {
           </Box>
         </Box>
 
-        {!isMobile && (
-          <TextField
-            placeholder="제품검색"
-            onKeyPress={onCheckEnter}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-            variant="outlined"
-            size="small"
-            sx={{ width: 200 }}
-          />
-        )}
+        <TextField
+          placeholder="제품검색"
+          onKeyPress={onCheckEnter}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          variant="outlined"
+          size="small"
+          sx={{ width: 200 }}
+        />
       </Box>
     </Box>
   );

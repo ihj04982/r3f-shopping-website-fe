@@ -25,7 +25,7 @@ const AppLayout = ({ children }) => {
     }, [user]);
 
     return (
-        <Box>
+        <Box sx={{ minHeight: '100vh' }}>
             <ToastMessage />
             {location.pathname.includes("admin") ? (
                 <Grid container sx={{ minHeight: "100vh" }}>
@@ -33,6 +33,7 @@ const AppLayout = ({ children }) => {
                         item
                         xs={12}
                         md={3}
+                        lg={2.5}
                         sx={{
                             bgcolor: "background.paper",
                             borderRight: 1,
@@ -41,15 +42,30 @@ const AppLayout = ({ children }) => {
                     >
                         <Sidebar />
                     </Grid>
-                    <Grid item xs={12} md={9}>
+                    <Grid
+                        item
+                        xs={12}
+                        md={9}
+                        lg={9.5}
+                        sx={{
+                            bgcolor: "background.default",
+                        }}
+                    >
                         {children}
                     </Grid>
                 </Grid>
             ) : (
-                <>
+                <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                     <Navbar user={user} />
-                    {children}
-                </>
+                    <Box
+                        component="main"
+                        sx={{
+                            flex: 1,
+                        }}
+                    >
+                        {children}
+                    </Box>
+                </Box>
             )}
         </Box>
     );

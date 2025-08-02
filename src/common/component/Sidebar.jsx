@@ -38,7 +38,7 @@ const Sidebar = () => {
         return (
             <Box sx={{ p: 2 }}>
                 <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-                    <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
+                    <DeviceHub />
                 </Link>
                 <Typography variant="h6" sx={{ mt: 2, mb: 1, fontWeight: "bold" }}>
                     Admin Account
@@ -90,7 +90,7 @@ const Sidebar = () => {
                 <>
                     <AppBar position="static" color="default" elevation={1} sx={{ display: { md: "none" } }}>
                         <Toolbar>
-                            <img width={80} src="/image/hm-logo.png" alt="hm-logo.png" />
+                            <DeviceHub sx={{ fontSize: 40 }} />
                             <Box sx={{ flexGrow: 1 }} />
                             <IconButton edge="end" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
                                 <MenuIcon />

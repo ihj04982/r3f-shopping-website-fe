@@ -14,6 +14,7 @@ import {
   Box,
   Typography,
   Divider,
+  Paper,
 } from "@mui/material";
 
 const Login = () => {
@@ -43,25 +44,15 @@ const Login = () => {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Box sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        bgcolor: 'background.paper',
-        p: 4,
-        borderRadius: 2,
-        boxShadow: 1,
-        border: 1,
-        borderColor: 'divider'
-      }}>
+    <Container maxWidth="sm" sx={{ py: 6 }}>
+      <Paper elevation={0} sx={{ width: '100%', p: 4 }}>
         {loginError && (
-          <Alert severity="error" sx={{ mb: 2, width: '100%' }}>
+          <Alert severity="error" sx={{ mb: 3, width: '100%' }}>
             {loginError}
           </Alert>
         )}
 
-        <Typography variant="h4" component="h1" sx={{ mb: 3, fontWeight: 'bold' }}>
+        <Typography variant="h3" component="h1" sx={{ mb: 4, textAlign: 'center' }}>
           로그인
         </Typography>
 
@@ -74,7 +65,7 @@ const Login = () => {
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            sx={{ mb: 2 }}
+            sx={{ mb: 3 }}
             variant="outlined"
           />
 
@@ -86,7 +77,7 @@ const Login = () => {
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            sx={{ mb: 3 }}
+            sx={{ mb: 4 }}
             variant="outlined"
           />
 
@@ -94,25 +85,20 @@ const Login = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mb: 3
+            mb: 4
           }}>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              size="large"
-            >
+            <Button variant="contained" type="submit" size="large">
               Login
             </Button>
-            <Typography variant="body2">
+            <Typography variant="body2" color="text.secondary">
               아직 계정이 없으세요?{" "}
-              <Link to="/register" style={{ color: 'primary.main', textDecoration: 'none' }}>
+              <Link to="/register" style={{ color: 'inherit', textDecoration: 'none' }}>
                 회원가입 하기
               </Link>
             </Typography>
           </Box>
 
-          <Divider sx={{ my: 3 }}>
+          <Divider sx={{ my: 4 }}>
             <Typography variant="body2" color="text.secondary">
               외부 계정으로 로그인하기
             </Typography>
@@ -129,7 +115,7 @@ const Login = () => {
             </GoogleOAuthProvider>
           </Box>
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
 };
