@@ -25,15 +25,12 @@ const AppLayout = ({ children }) => {
     }, [user]);
 
     return (
-        <Box sx={{ minHeight: '100vh' }}>
+        <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
             <ToastMessage />
             {location.pathname.includes("admin") ? (
-                <Grid container sx={{ minHeight: "100vh" }}>
+                <Grid container sx={{ height: "100vh" }}>
                     <Grid
-                        item
-                        xs={12}
-                        md={3}
-                        lg={2.5}
+                        size={{ xs: 12, md: 3, lg: 2.5 }}
                         sx={{
                             bgcolor: "background.paper",
                             borderRight: 1,
@@ -43,10 +40,7 @@ const AppLayout = ({ children }) => {
                         <Sidebar />
                     </Grid>
                     <Grid
-                        item
-                        xs={12}
-                        md={9}
-                        lg={9.5}
+                        size={{ xs: 12, md: 9, lg: 9.5 }}
                         sx={{
                             bgcolor: "background.default",
                         }}
@@ -55,7 +49,7 @@ const AppLayout = ({ children }) => {
                     </Grid>
                 </Grid>
             ) : (
-                <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
                     <Navbar user={user} />
                     <Box
                         component="main"

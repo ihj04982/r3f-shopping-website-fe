@@ -37,7 +37,7 @@ const Navbar = ({ user }) => {
   const [showSearchBox, setShowSearchBox] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const menuList = ["여성", "Divided", "남성", "신생아/유아", "아동", "H&M HOME", "Sale", "지속가능성"];
+  const menuList = ["ShowRoom", "여성", "Divided", "남성", "신생아/유아", "아동", "H&M HOME", "Sale", "지속가능성"];
   let navigate = useNavigate();
 
   const onCheckEnter = (event) => {
