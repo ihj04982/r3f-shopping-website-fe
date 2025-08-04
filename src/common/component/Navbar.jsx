@@ -28,7 +28,6 @@ import {
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../features/user/userSlice";
 
 const Navbar = ({ user }) => {
     const dispatch = useDispatch();
@@ -50,12 +49,12 @@ const Navbar = ({ user }) => {
         }
     };
 
-    const handleLogin = () => {
-        navigate("/login");
-    };
-
-    const handleLogout = () => {
-        dispatch(logout());
+    const moveToMyPage = () => {
+        if (user) {
+            navigate("/account");
+        } else {
+            navigate("/login");
+        }
     };
 
     const toggleDrawer = (open) => (event) => {
@@ -119,7 +118,7 @@ const Navbar = ({ user }) => {
                     </Box>
 
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <IconButton color="inherit" onClick={user ? handleLogout : handleLogin}>
+                        <IconButton color="inherit" onClick={moveToMyPage}>
                             <PersonIcon />
                         </IconButton>
 
@@ -127,10 +126,6 @@ const Navbar = ({ user }) => {
                             <Badge badgeContent={cartItemCount || 0} color="error">
                                 <ShoppingBagIcon />
                             </Badge>
-                        </IconButton>
-
-                        <IconButton color="inherit" onClick={() => navigate("/account/purchase")}>
-                            <ShoppingCart />
                         </IconButton>
 
                         {isMobile && (

@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loginWithEmail } from "../../features/user/userSlice";
 import { clearErrors } from "../../features/user/userSlice";
 import { Container, TextField, Button, Alert, Box, Typography, Divider, Paper } from "@mui/material";
+
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const Login = () => {
@@ -38,7 +39,7 @@ const Login = () => {
         <Container maxWidth="sm" sx={{ py: 6 }}>
             <Paper elevation={0} sx={{ width: "100%", p: 4 }}>
                 <Typography variant="h3" component="h3" sx={{ mb: 4, textAlign: "center" }}>
-                    LOGIN
+                    로그인
                 </Typography>
 
                 <Box component="form" onSubmit={handleLoginWithEmail} sx={{ width: "100%" }}>

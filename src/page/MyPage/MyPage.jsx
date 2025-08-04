@@ -1,52 +1,45 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from "../../utils/api";
-import { showToastMessage } from "../common/uiSlice";
+import React from "react";
+import { useEffect } from "react";
+import { Box, Button, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import OrderStatusCard from "./component/OrderStatusCard.jsx";
+import { getOrder } from "../../features/order/orderSlice";
+import { logout } from "../../features/user/userSlice";
 
-// 비동기 액션 생성
-export const getProductList = createAsyncThunk("products/getProductList", async (query, { rejectWithValue }) => {});
+const MyPage = () => {
+    const dispatch = useDispatch();
+    const { orderList } = useSelector((state) => state.order);
+    console.log(orderList);
 
-export const getProductDetail = createAsyncThunk("products/getProductDetail", async (id, { rejectWithValue }) => {});
+    useEffect(() => {
+        dispatch(getOrder());
+    }, [dispatch]);
 
-export const createProduct = createAsyncThunk(
-  "products/createProduct",
-  async (formData, { dispatch, rejectWithValue }) => {}
-);
+    const handleLogout = () => {
+        dispatch(logout());
+    };
 
-export const deleteProduct = createAsyncThunk(
-  "products/deleteProduct",
-  async (id, { dispatch, rejectWithValue }) => {}
-);
+    return (
+        <Box sx={{ padding: 3 }}>
+            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button variant="outlined" size="small" onClick={handleLogout}>
+                    로그아웃
+                </Button>
+            </Box>
+            <Box sx={{ padding: 3 }}>
+                {orderList.map((item) => (
+                    <OrderStatusCard orderItem={item} key={item._id} />
+                ))}
+            </Box>
+            {orderList?.length === 0 && (
+                <Box sx={{ padding: 3, textAlign: "center" }}>
+                    <Typography variant="h6" color="text.secondary">
+                        진행중인 주문이 없습니다.
+                    </Typography>
+                </Box>
+            )}
+        </Box>
+    );
+};
 
-export const editProduct = createAsyncThunk(
-  "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {}
-);
-
-// 슬라이스 생성
-const productSlice = createSlice({
-  name: "products",
-  initialState: {
-    productList: [],
-    selectedProduct: null,
-    loading: false,
-    error: "",
-    totalPageNum: 1,
-    success: false,
-  },
-  reducers: {
-    setSelectedProduct: (state, action) => {
-      state.selectedProduct = action.payload;
-    },
-    setFilteredList: (state, action) => {
-      state.filteredList = action.payload;
-    },
-    clearError: (state) => {
-      state.error = "";
-      state.success = false;
-    },
-  },
-  extraReducers: (builder) => {},
-});
-
-export const { setSelectedProduct, setFilteredList, clearError } = productSlice.actions;
-export default productSlice.reducer;
+export default MyPage;
