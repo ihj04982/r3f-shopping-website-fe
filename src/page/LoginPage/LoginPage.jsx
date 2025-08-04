@@ -37,8 +37,8 @@ const Login = () => {
     return (
         <Container maxWidth="sm" sx={{ py: 6 }}>
             <Paper elevation={0} sx={{ width: "100%", p: 4 }}>
-                <Typography variant="h3" component="h1" sx={{ mb: 4, textAlign: "center" }}>
-                    로그인
+                <Typography variant="h3" component="h3" sx={{ mb: 4, textAlign: "center" }}>
+                    LOGIN
                 </Typography>
 
                 <Box component="form" onSubmit={handleLoginWithEmail} sx={{ width: "100%" }}>
@@ -79,8 +79,8 @@ const Login = () => {
                             mb: 4,
                         }}
                     >
-                        <Button variant="contained" type="submit" size="large">
-                            Login
+                        <Button variant="contained" type="submit">
+                            로그인
                         </Button>
                         <Typography variant="body2" color="text.secondary">
                             아직 계정이 없으세요?{" "}
