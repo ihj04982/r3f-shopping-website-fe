@@ -1,7 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
-    // Color Palette (기존과 동일)
     palette: {
         mode: "light",
         primary: {
@@ -32,73 +31,13 @@ const theme = createTheme({
             800: "#262626",
             900: "#171717",
         },
-        success: {
-            50: "#f0fdf4",
-            100: "#dcfce7",
-            200: "#bbf7d0",
-            300: "#86efac",
-            400: "#4ade80",
-            500: "#22c55e",
-            600: "#16a34a",
-            700: "#15803d",
-            800: "#166534",
-            900: "#14532d",
-            main: "#22c55e",
-            light: "#4ade80",
-            dark: "#15803d",
-            contrastText: "#ffffff",
-        },
-        error: {
-            50: "#fef2f2",
-            100: "#fee2e2",
-            200: "#fecaca",
-            300: "#fca5a5",
-            400: "#f87171",
-            500: "#ef4444",
-            600: "#dc2626",
-            700: "#b91c1c",
-            800: "#991b1b",
-            900: "#7f1d1d",
-            main: "#ef4444",
-            light: "#f87171",
-            dark: "#b91c1c",
-            contrastText: "#ffffff",
-        },
-        warning: {
-            50: "#fffbeb",
-            100: "#fef3c7",
-            200: "#fde68a",
-            300: "#fcd34d",
-            400: "#fbbf24",
-            500: "#f59e0b",
-            600: "#d97706",
-            700: "#b45309",
-            800: "#92400e",
-            900: "#78350f",
-            main: "#f59e0b",
-            light: "#fbbf24",
-            dark: "#b45309",
-            contrastText: "#ffffff",
-        },
-        info: {
-            main: "#3b82f6",
-            light: "#60a5fa",
-            dark: "#1d4ed8",
-            contrastText: "#ffffff",
-        },
         background: {
             default: "#ffffff",
             paper: "#f8f9fa",
-            tertiary: "#f1f3f4",
-            dark: "#202124",
-            overlay: "rgba(0, 0, 0, 0.4)",
         },
         text: {
             primary: "#202124",
             secondary: "#5f6368",
-            tertiary: "#80868b",
-            inverse: "#ffffff",
-            muted: "#9aa0a6",
         },
         divider: "#e8eaed",
     },
@@ -233,7 +172,6 @@ const theme = createTheme({
             md: 768,
             lg: 1024,
             xl: 1280,
-            xxl: 1536,
         },
     },
 
@@ -253,7 +191,21 @@ const theme = createTheme({
         "4.5px 4.5px 0px 0px rgba(32, 33, 36, 0.8)",
         "0 0 6px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08)",
         "0 0 8px rgba(0,0,0,0.03), 0 2px 6px rgba(0,0,0,0.08)",
-        ...Array(9).fill("none"),
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
+        "none",
     ],
 
     transitions: {
@@ -262,7 +214,6 @@ const theme = createTheme({
             easeOut: "cubic-bezier(0, 0, 0.2, 1)",
             easeIn: "cubic-bezier(0.4, 0, 1, 1)",
             sharp: "cubic-bezier(0.4, 0, 0.6, 1)",
-            custom: "cubic-bezier(0.16, 1, 0.3, 1)",
         },
         duration: {
             shortest: 150,
@@ -499,37 +450,6 @@ const theme = createTheme({
             },
         },
 
-        metal: {
-            gold: {
-                outer: "linear-gradient(to bottom, #917100, #EAD98F)",
-                inner: "linear-gradient(to bottom, #FFFDDD, #856807, #FFF1B3)",
-                button: "linear-gradient(to bottom, #FFEBA1, #9B873F)",
-                text: "#FFFDE5",
-                shadow: "rgb(178 140 2 / 100%)",
-            },
-            bronze: {
-                outer: "linear-gradient(to bottom, #864813, #E9B486)",
-                inner: "linear-gradient(to bottom, #EDC5A1, #5F2D01, #FFDEC1)",
-                button: "linear-gradient(to bottom, #FFE3C9, #A36F3D)",
-                text: "#FFF7F0",
-                shadow: "rgb(124 45 18 / 100%)",
-            },
-            success: {
-                outer: "linear-gradient(to bottom, #005A43, #7CCB9B)",
-                inner: "linear-gradient(to bottom, #E5F8F0, #00352F, #D1F0E6)",
-                button: "linear-gradient(to bottom, #9ADBC8, #3E8F7C)",
-                text: "#FFF7F0",
-                shadow: "rgb(6 78 59 / 100%)",
-            },
-            error: {
-                outer: "linear-gradient(to bottom, #5A0000, #FFAEB0)",
-                inner: "linear-gradient(to bottom, #FFDEDE, #680002, #FFE9E9)",
-                button: "linear-gradient(to bottom, #F08D8F, #A45253)",
-                text: "#FFF7F0",
-                shadow: "rgb(146 64 14 / 100%)",
-            },
-        },
-
         gradients: {
             primary: "linear-gradient(135deg, #202124 0%, #404040 100%)",
             secondary: "linear-gradient(135deg, #f8f9fa 0%, #e8eaed 100%)",
@@ -543,22 +463,6 @@ const theme = createTheme({
                 subtle: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
                 dark: "linear-gradient(135deg, #202124 0%, #404040 100%)",
                 overlay: "linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%)",
-            },
-        },
-
-        effects: {
-            glass: {
-                background: "rgba(255, 255, 255, 0.1)",
-                backdropFilter: "blur(10px)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-            },
-            gridPattern: {
-                backgroundImage: `
-                    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 0, 0, 0.09) 1px, transparent 1px)
-                `,
-                backgroundSize: "40px 40px",
-                backgroundPosition: "0 0, 0 0",
             },
         },
 

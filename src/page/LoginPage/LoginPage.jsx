@@ -83,6 +83,7 @@ const Login = () => {
                         <Button variant="contained" type="submit">
                             로그인
                         </Button>
+
                         <Typography variant="body2" color="text.secondary">
                             아직 계정이 없으세요?{" "}
                             <Link to="/register" style={{ color: "inherit", textDecoration: "none" }}>
