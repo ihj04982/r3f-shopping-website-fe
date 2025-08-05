@@ -27,13 +27,12 @@ import {
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Navbar = ({ user }) => {
-    const dispatch = useDispatch();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-    const { cartItemCount } = useSelector((state) => state.cart);
+    const { cartItemCount } = useSelector((state) => state?.cart || { cartItemCount: 0 });
     const [showSearchBox, setShowSearchBox] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
@@ -73,7 +72,11 @@ const Navbar = ({ user }) => {
             </Box>
             <List>
                 {menuList.map((menu, index) => (
-                    <ListItem button key={index}>
+                    <ListItem
+                        key={index}
+                        component="button"
+                        sx={{ width: "100%", textAlign: "left", border: "none", background: "none" }}
+                    >
                         <ListItemText primary={menu} />
                     </ListItem>
                 ))}

@@ -12,9 +12,24 @@ export const PRODUCT_EDIT_REQUEST = "PRODUCT_EDIT_REQUEST";
 export const PRODUCT_EDIT_SUCCESS = "PRODUCT_EDIT_SUCCESS";
 export const PRODUCT_EDIT_FAIL = "PRODUCT_EDIT_FAIL";
 export const SET_FILTERED_LIST = "SET_FILTERED_LIST";
-export const CATEGORY = ["Top", "Dress", "Pants"];
+export const CATEGORY = ["Glasses", "Sunglasses", "Accessories"];
 export const STATUS = ["active", "disactive"];
-export const SIZE = ["XS", "S", "M", "L", "XL"];
+export const COLORS = [
+    "Black",
+    "White",
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Pink",
+    "Purple",
+    "Orange",
+    "Brown",
+    "Gray",
+    "Navy",
+    "Silver",
+    "Gold",
+];
 export const TOGGLE_ITEM_DIALOG = "TOGGLE_ITEM_DIALOG";
 export const SEARCH_PRODUCT_REQUEST = " SEARCH_PRODUCT_REQUEST";
 export const SEARCH_PRODUCT_SUCCESS = " SEARCH_PRODUCT_SUCCESS";
