@@ -14,10 +14,8 @@ const ShowRoomPage = () => {
             }}
         >
             <Canvas style={{ width: "100%", height: "100%" }}>
-                <axesHelper args={[5]} />
-                <gridHelper args={[10, 10]} />
-                <OrbitControls />
-                <directionalLight position={[3, 3, 3]} />
+                {/* <axesHelper args={[5]} /> */}
+                {/* <gridHelper args={[10, 10]} /> */}
                 <ShowRoom />
             </Canvas>
         </Box>
