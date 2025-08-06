@@ -8,6 +8,7 @@ import {
     TextField,
     FormControl,
     FormLabel,
+    FormHelperText,
     Select,
     MenuItem,
     Alert,
@@ -20,7 +21,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import CloudinaryUploadWidget from "../../../utils/CloudinaryUploadWidget";
 import { CATEGORY, STATUS, COLORS } from "../../../constants/product.constants";
-import { clearError, createProduct, editProduct } from "../../../features/product/productSlice";
+import { clearError, createProduct, editProduct, getProductList } from "../../../features/product/productSlice";
+import { useSearchParams } from "react-router-dom";
 
 const InitialFormData = {
     name: "",
@@ -39,7 +41,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     const [formData, setFormData] = useState(mode === "new" ? { ...InitialFormData } : selectedProduct);
     const [stock, setStock] = useState([]);
     const dispatch = useDispatch();
-    const [stockError, setStockError] = useState(false);
+    const [validationError, setValidationError] = useState("");
+    const [query] = useSearchParams();
 
     useEffect(() => {
         if (success) setShowDialog(false);
@@ -70,18 +73,43 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         // 다이얼로그 닫아주기
         setFormData({ ...InitialFormData });
         setStock([]);
-        setStockError(false);
+        setValidationError("");
         setShowDialog(false);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        dispatch(getProductList({ page: query.get("page") || 1, name: query.get("name") || "" }));
 
         if (stock.length === 0) {
-            setStockError(true);
+            setValidationError("재고를 추가해주세요");
             return;
         }
-        setStockError(false);
+
+        const invalidStockItems = stock.filter((item) => {
+            const [color, quantity] = item;
+            return (
+                !color ||
+                color.trim() === "" ||
+                quantity === null ||
+                quantity === undefined ||
+                quantity === "" ||
+                isNaN(parseInt(quantity)) ||
+                parseInt(quantity) <= 0
+            );
+        });
+
+        if (invalidStockItems.length > 0) {
+            setValidationError("재고 정보를 올바르게 입력해주세요");
+            return;
+        }
+
+        if (formData.category.length === 0) {
+            setValidationError("카테고리를 선택해주세요");
+            return;
+        }
+
+        setValidationError("");
 
         const stockObject = stock.reduce((total, item) => {
             return { ...total, [item[0]]: parseInt(item[1]) };
@@ -133,10 +161,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
     const onHandleCategory = (event) => {
         const value = event.target.value;
+        const categoryValue = typeof value === "string" ? value.split(",") : value;
         setFormData({
             ...formData,
-            category: typeof value === "string" ? value.split(",") : value,
+            category: categoryValue,
         });
+        if (categoryValue.length > 0) {
+            setValidationError("");
+        }
     };
 
     const uploadImage = (url) => {
@@ -165,9 +197,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                 </IconButton>
             </DialogTitle>
 
-            {error && (
+            {(error || validationError) && (
                 <Box sx={{ px: 3, pt: 1 }}>
-                    <Alert severity="error">{error}</Alert>
+                    <Alert severity="error">{error || validationError}</Alert>
                 </Box>
             )}
 
@@ -216,11 +248,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                     <Box sx={{ mt: 2 }}>
                         <FormControl fullWidth id="stock">
                             <FormLabel>Stock</FormLabel>
-                            {stockError && (
-                                <Typography color="error" variant="caption">
-                                    재고를 추가해주세요
-                                </Typography>
-                            )}
                             <Button variant="outlined" size="small" onClick={addStock} sx={{ mt: 1 }}>
                                 Add +
                             </Button>
@@ -313,13 +340,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                         <Grid size={{ xs: 12, sm: 4 }}>
                             <FormControl fullWidth>
                                 <FormLabel>Category</FormLabel>
-                                <Select
-                                    id="category"
-                                    multiple
-                                    value={formData.category}
-                                    onChange={onHandleCategory}
-                                    required
-                                >
+                                <Select id="category" multiple value={formData.category} onChange={onHandleCategory}>
                                     {CATEGORY.map((item, idx) => (
                                         <MenuItem key={idx} value={item.toLowerCase()}>
                                             {item}
