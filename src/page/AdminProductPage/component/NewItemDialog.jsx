@@ -86,7 +86,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         const stockObject = stock.reduce((total, item) => {
             return { ...total, [item[0]]: parseInt(item[1]) };
         }, {});
-        console.log(formData, stockObject);
+
         if (mode === "new") {
             //새 상품 만들기
             dispatch(createProduct({ ...formData, stock: stockObject }));

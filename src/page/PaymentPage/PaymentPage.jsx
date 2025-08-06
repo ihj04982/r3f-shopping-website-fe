@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import OrderReceipt from "./component/OrderReceipt";
 import PaymentForm from "./component/PaymentForm";
-import "./style/paymentPage.style.css";
 import { createOrder } from "../../features/order/orderSlice";
 
 const PaymentPage = () => {
@@ -59,14 +58,14 @@ const PaymentPage = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Grid container spacing={4}>
-                <Grid item size={{ xs: 12, lg: 7 }}>
+                <Grid size={{ xs: 12, lg: 7 }}>
                     <Box>
                         <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
                             배송 주소
                         </Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Grid container spacing={3} sx={{ mb: 3 }}>
-                                <Grid item size={{ xs: 12, sm: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
                                         fullWidth
                                         label="성"
@@ -77,7 +76,7 @@ const PaymentPage = () => {
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid item size={{ xs: 12, sm: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
                                         fullWidth
                                         label="이름"
@@ -115,7 +114,7 @@ const PaymentPage = () => {
                             />
 
                             <Grid container spacing={3} sx={{ mb: 3 }}>
-                                <Grid item size={{ xs: 12, sm: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
                                         fullWidth
                                         label="City"
@@ -126,7 +125,7 @@ const PaymentPage = () => {
                                         variant="outlined"
                                     />
                                 </Grid>
-                                <Grid item size={{ xs: 12, sm: 6 }}>
+                                <Grid size={{ xs: 12, sm: 6 }}>
                                     <TextField
                                         fullWidth
                                         label="Zip"
@@ -170,7 +169,7 @@ const PaymentPage = () => {
                         </Box>
                     </Box>
                 </Grid>
-                <Grid item size={{ xs: 12, lg: 5 }}>
+                <Grid size={{ xs: 12, lg: 5 }}>
                     <Box sx={{ display: { xs: "none", lg: "block" } }}>
                         <OrderReceipt />
                     </Box>
