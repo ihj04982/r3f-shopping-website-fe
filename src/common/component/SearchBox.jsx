@@ -15,7 +15,6 @@ const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
 
     return (
         <TextField
-            fullWidth
             placeholder={placeholder}
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
@@ -27,7 +26,8 @@ const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
                     </InputAdornment>
                 ),
             }}
-            variant="outlined"
+            variant="standard"
+            sx={{ width: "50%" }}
         />
     );
 };

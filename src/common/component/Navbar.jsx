@@ -36,7 +36,12 @@ const Navbar = ({ user }) => {
     const [showSearchBox, setShowSearchBox] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");
-    const menuList = ["ShowRoom", "여성", "Divided", "남성", "신생아/유아", "아동", "H&M HOME", "Sale", "지속가능성"];
+    const menuList = [
+        { name: "ShowRoom", path: "/showroom" },
+        { name: "Glasses", path: "/" },
+        { name: "Sunglasses", path: "/" },
+        { name: "Accessories", path: "/" },
+    ];
     let navigate = useNavigate();
 
     const onCheckEnter = (event) => {
@@ -75,9 +80,13 @@ const Navbar = ({ user }) => {
                     <ListItem
                         key={index}
                         component="button"
+                        onClick={() => {
+                            navigate(menu.path);
+                            toggleDrawer(false)();
+                        }}
                         sx={{ width: "100%", textAlign: "left", border: "none", background: "none" }}
                     >
-                        <ListItemText primary={menu} />
+                        <ListItemText primary={menu.name} />
                     </ListItem>
                 ))}
             </List>
@@ -179,7 +188,7 @@ const Navbar = ({ user }) => {
             <Box
                 sx={{
                     display: { xs: "none", md: "flex" },
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     alignItems: "center",
                     px: 2,
                     py: 1,
@@ -201,28 +210,17 @@ const Navbar = ({ user }) => {
                     >
                         {menuList.map((menu, index) => (
                             <Box component="li" key={index}>
-                                <Button color="inherit" sx={{ textTransform: "none" }}>
-                                    {menu}
+                                <Button
+                                    color="inherit"
+                                    sx={{ textTransform: "none" }}
+                                    onClick={() => navigate(menu.path)}
+                                >
+                                    {menu.name}
                                 </Button>
                             </Box>
                         ))}
                     </Box>
                 </Box>
-
-                <TextField
-                    placeholder="제품검색"
-                    onKeyPress={onCheckEnter}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: 200 }}
-                />
             </Box>
         </Box>
     );
