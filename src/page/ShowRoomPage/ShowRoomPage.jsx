@@ -5,7 +5,7 @@ import { Environment, OrbitControls, ContactShadows } from "@react-three/drei";
 import { RotateLeft, ShoppingCart } from "@mui/icons-material";
 import * as THREE from "three";
 import ShowRoom from "./component/ShowRoom";
-import { StudioLights, DustParticles, HazyAir, FilmGrain, DomeBackground } from "./component/StudioEffects";
+import { StudioLights, HazyAir, FilmGrain, DomeBackground } from "./component/StudioEffects";
 import ColorSelection from "./component/ColorSelection";
 
 const ShowRoomPage = () => {

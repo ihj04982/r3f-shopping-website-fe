@@ -7,7 +7,7 @@ import { CameraControls, ContactShadows, Float } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
 const ShowRoom = ({ selectedColor, isRotating }) => {
-    const gltf = useLoader(GLTFLoader, "./models/sunglasses.glb");
+    const gltf = useLoader(GLTFLoader, "/models/sunglasses.glb");
     const { raycaster } = useThree();
     const cameraControlsRef = useRef(null);
     const modelRef = useRef(null);
@@ -16,7 +16,6 @@ const ShowRoom = ({ selectedColor, isRotating }) => {
         gltf.scene.children.forEach((child) => {
             child.children.forEach((child) => {
                 if (child.isMesh) {
-                    console.log(child.name);
                     child.castShadow = true;
                     child.receiveShadow = true;
                 }

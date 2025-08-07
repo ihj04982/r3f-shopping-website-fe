@@ -12,17 +12,21 @@ export default defineConfig({
                     const info = assetInfo.name.split(".");
                     const ext = info[info.length - 1];
                     if (/glb|gltf/i.test(ext)) {
-                        return `assets/models/[name]-[hash][extname]`;
+                        return `models/[name][extname]`;
                     }
                     return `assets/[name]-[hash][extname]`;
                 },
             },
         },
+        chunkSizeWarningLimit: 1000,
     },
     server: {
         headers: {
             "Cross-Origin-Embedder-Policy": "require-corp",
             "Cross-Origin-Opener-Policy": "same-origin",
         },
+    },
+    optimizeDeps: {
+        exclude: ["three/examples/jsm/loaders/GLTFLoader.js"],
     },
 });
