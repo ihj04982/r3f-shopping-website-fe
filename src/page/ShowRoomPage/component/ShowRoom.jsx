@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
 import { useThree } from "@react-three/fiber";
 import { CameraControls, ContactShadows } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+// import { useFrame } from "@react-three/fiber";
 
 const ShowRoom = () => {
     const gltf = useLoader(GLTFLoader, "./models/sunglasses.glb");
@@ -12,7 +12,6 @@ const ShowRoom = () => {
     const cameraControlsRef = useRef(null);
 
     useEffect(() => {
-        // cameraControlsRef.current.setTarget(0, 0, 0, false);
         gltf.scene.children.forEach((child) => {
             child.children.forEach((child) => {
                 if (child.isMesh) {
@@ -30,10 +29,10 @@ const ShowRoom = () => {
     }, []);
 
     // TODO: 버튼 클릭시 턴테이블 동작하도록 수정
-    useFrame(() => {
-        const angle = Date.now() / 3000;
-        cameraControlsRef.current.setPosition(Math.sin(angle) * 2, 2, Math.cos(angle) * 2);
-    });
+    // useFrame(() => {
+    //     const angle = Date.now() / 3000;
+    //     cameraControlsRef.current.setPosition(Math.sin(angle) * 2, 2, Math.cos(angle) * 2);
+    // });
 
     const handleClick = () => {
         const intersects = raycaster.intersectObjects(gltf.scene.children, true);
@@ -50,10 +49,10 @@ const ShowRoom = () => {
     return (
         <>
             <CameraControls ref={cameraControlsRef} dollyToCursor={true} minDistance={2} maxDistance={10} />
-            <mesh scale={5} position={[0, -0.8, 0]}>
+            {/* <mesh scale={5} position={[0, -0.8, 0]}>
                 <cylinderGeometry args={[0.5, 0.2, 0.3, 50]} />
                 <meshStandardMaterial />
-            </mesh>
+            </mesh> */}
             <directionalLight position={[3, 3, 3]} />
             <pointLight position={[0, 5, 0]} intensity={3} />
             <primitive object={gltf.scene} onClick={handleClick} />
