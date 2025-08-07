@@ -75,32 +75,14 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         setStock([]);
         setValidationError("");
         setShowDialog(false);
+        dispatch(getProductList({ page: query.get("page") || 1, name: query.get("name") || "" }));
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        dispatch(getProductList({ page: query.get("page") || 1, name: query.get("name") || "" }));
 
         if (stock.length === 0) {
             setValidationError("재고를 추가해주세요");
-            return;
-        }
-
-        const invalidStockItems = stock.filter((item) => {
-            const [color, quantity] = item;
-            return (
-                !color ||
-                color.trim() === "" ||
-                quantity === null ||
-                quantity === undefined ||
-                quantity === "" ||
-                isNaN(parseInt(quantity)) ||
-                parseInt(quantity) <= 0
-            );
-        });
-
-        if (invalidStockItems.length > 0) {
-            setValidationError("재고 정보를 올바르게 입력해주세요");
             return;
         }
 
@@ -109,8 +91,10 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
             return;
         }
 
-        setValidationError("");
-
+        if (formData.image === "") {
+            setValidationError("이미지를 추가해주세요");
+            return;
+        }
         const stockObject = stock.reduce((total, item) => {
             return { ...total, [item[0]]: parseInt(item[1]) };
         }, {});
@@ -181,202 +165,215 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
 
     return (
         <Dialog open={showDialog} onClose={handleClose} maxWidth="md" fullWidth>
-            <DialogTitle>
-                {mode === "new" ? "Create New Product" : "Edit Product"}
-                <IconButton
-                    aria-label="close"
-                    onClick={handleClose}
-                    sx={{
-                        position: "absolute",
-                        right: 8,
-                        top: 8,
-                        color: (theme) => theme.palette.grey[500],
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </DialogTitle>
+            <Box component="form" onSubmit={handleSubmit}>
+                <DialogTitle>
+                    {mode === "new" ? "Create New Product" : "Edit Product"}
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        sx={{
+                            position: "absolute",
+                            right: 8,
+                            top: 8,
+                            color: (theme) => theme.palette.grey[500],
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
 
-            {(error || validationError) && (
-                <Box sx={{ px: 3, pt: 1 }}>
-                    <Alert severity="error">{error || validationError}</Alert>
-                </Box>
-            )}
-
-            <DialogContent>
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-                    <Grid container spacing={2}>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                id="sku"
-                                fullWidth
-                                label="Sku"
-                                value={formData.sku}
-                                onChange={handleChange}
-                                placeholder="Enter Sku"
-                                required
-                                name="sku"
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 6 }}>
-                            <TextField
-                                id="name"
-                                fullWidth
-                                label="Name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Name"
-                                required
-                                name="name"
-                            />
-                        </Grid>
-                    </Grid>
-                    <TextField
-                        id="description"
-                        fullWidth
-                        label="Description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        placeholder="Description"
-                        multiline
-                        rows={3}
-                        required
-                        name="description"
-                        sx={{ mt: 2 }}
-                    />
-
-                    <Box sx={{ mt: 2 }}>
-                        <FormControl fullWidth id="stock">
-                            <FormLabel>Stock</FormLabel>
-                            <Button variant="outlined" size="small" onClick={addStock} sx={{ mt: 1 }}>
-                                Add +
-                            </Button>
-                            <Box sx={{ mt: 2 }}>
-                                {stock.map((item, index) => (
-                                    <Grid container spacing={1} key={index} sx={{ mb: 1 }}>
-                                        <Grid size={{ xs: 5 }}>
-                                            <FormControl fullWidth id="color">
-                                                <Select
-                                                    value={item[0] ? item[0].toLowerCase() : ""}
-                                                    onChange={(event) => handleColorChange(event.target.value, index)}
-                                                    required
-                                                    displayEmpty
-                                                >
-                                                    <MenuItem value="" disabled>
-                                                        Please Choose...
-                                                    </MenuItem>
-                                                    {COLORS.map((color, idx) => (
-                                                        <MenuItem
-                                                            key={idx}
-                                                            value={color.toLowerCase()}
-                                                            disabled={stock.some(
-                                                                (stockItem) => stockItem[0] === color.toLowerCase()
-                                                            )}
-                                                        >
-                                                            {color}
-                                                        </MenuItem>
-                                                    ))}
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-                                        <Grid size={{ xs: 6 }}>
-                                            <TextField
-                                                id="stock"
-                                                fullWidth
-                                                type="number"
-                                                placeholder="number of stock"
-                                                value={item[1]}
-                                                onChange={(event) => handleStockChange(event.target.value, index)}
-                                                required
-                                            />
-                                        </Grid>
-                                        <Grid size={{ xs: 1 }}>
-                                            <IconButton color="error" onClick={() => deleteStock(index)} sx={{ mt: 1 }}>
-                                                <CloseIcon />
-                                            </IconButton>
-                                        </Grid>
-                                    </Grid>
-                                ))}
-                            </Box>
-                        </FormControl>
+                {(error || validationError) && (
+                    <Box sx={{ px: 3, pt: 1 }}>
+                        <Alert severity="error">{error || validationError}</Alert>
                     </Box>
+                )}
 
-                    <Box sx={{ mt: 2 }}>
-                        <FormControl fullWidth sx={{ gap: 1 }} id="image">
-                            <FormLabel>Image</FormLabel>
-                            <CloudinaryUploadWidget uploadImage={uploadImage} />
-                            {formData.image && (
-                                <img
-                                    id="uploadedimage"
-                                    src={formData.image}
-                                    style={{
-                                        width: "100px",
-                                        height: "100px",
-                                        objectFit: "cover",
-                                        marginTop: "8px",
-                                        border: "1px solid #ddd",
-                                        borderRadius: "4px",
-                                    }}
-                                    alt="uploadedimage"
-                                />
-                            )}
-                        </FormControl>
-                    </Box>
-
-                    <Grid container spacing={2} sx={{ mt: 3, alignItems: "flex-end" }}>
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                            <TextField
-                                id="price"
-                                fullWidth
-                                label="Price"
-                                type="number"
-                                value={formData.price}
-                                onChange={handleChange}
-                                placeholder="0"
-                                required
-                                name="price"
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                            <FormControl fullWidth>
-                                <FormLabel>Category</FormLabel>
-                                <Select id="category" multiple value={formData.category} onChange={onHandleCategory}>
-                                    {CATEGORY.map((item, idx) => (
-                                        <MenuItem key={idx} value={item.toLowerCase()}>
-                                            {item}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid size={{ xs: 12, sm: 4 }}>
-                            <FormControl fullWidth>
-                                <FormLabel>Status</FormLabel>
-                                <Select
-                                    id="status"
-                                    name="status"
-                                    value={formData.status}
+                <DialogContent>
+                    <Box sx={{ mt: 1 }}>
+                        <Grid container spacing={2}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    id="sku"
+                                    fullWidth
+                                    label="Sku"
+                                    value={formData.sku}
                                     onChange={handleChange}
+                                    placeholder="Enter Sku"
                                     required
-                                >
-                                    {STATUS.map((item, idx) => (
-                                        <MenuItem key={idx} value={item}>
-                                            {item}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                    name="sku"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <TextField
+                                    id="name"
+                                    fullWidth
+                                    label="Name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    placeholder="Name"
+                                    required
+                                    name="name"
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Box>
-            </DialogContent>
+                        <TextField
+                            id="description"
+                            fullWidth
+                            label="Description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            placeholder="Description"
+                            multiline
+                            rows={3}
+                            required
+                            name="description"
+                            sx={{ mt: 2 }}
+                        />
 
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button variant="contained" type="submit" onClick={handleSubmit}>
-                    {mode === "new" ? "Submit" : "Edit"}
-                </Button>
-            </DialogActions>
+                        <Box sx={{ mt: 2 }}>
+                            <FormControl fullWidth id="stock">
+                                <FormLabel>Stock</FormLabel>
+                                <Button variant="outlined" size="small" onClick={addStock} sx={{ mt: 1 }}>
+                                    Add +
+                                </Button>
+                                <Box sx={{ mt: 2 }}>
+                                    {stock.map((item, index) => (
+                                        <Grid container spacing={1} key={index} sx={{ mb: 1 }}>
+                                            <Grid size={{ xs: 5 }}>
+                                                <FormControl fullWidth id="color">
+                                                    <Select
+                                                        value={item[0] ? item[0].toLowerCase() : ""}
+                                                        onChange={(event) =>
+                                                            handleColorChange(event.target.value, index)
+                                                        }
+                                                        required
+                                                        displayEmpty
+                                                    >
+                                                        <MenuItem value="" disabled>
+                                                            Please Choose...
+                                                        </MenuItem>
+                                                        {COLORS.map((color, idx) => (
+                                                            <MenuItem
+                                                                key={idx}
+                                                                value={color.toLowerCase()}
+                                                                disabled={stock.some(
+                                                                    (stockItem) => stockItem[0] === color.toLowerCase()
+                                                                )}
+                                                            >
+                                                                {color}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </Grid>
+                                            <Grid size={{ xs: 6 }}>
+                                                <TextField
+                                                    id="stock"
+                                                    fullWidth
+                                                    type="number"
+                                                    placeholder="number of stock"
+                                                    value={item[1]}
+                                                    onChange={(event) => handleStockChange(event.target.value, index)}
+                                                    required
+                                                />
+                                            </Grid>
+                                            <Grid size={{ xs: 1 }}>
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={() => deleteStock(index)}
+                                                    sx={{ mt: 1 }}
+                                                >
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </Grid>
+                                        </Grid>
+                                    ))}
+                                </Box>
+                            </FormControl>
+                        </Box>
+
+                        <Box sx={{ mt: 2 }}>
+                            <FormControl fullWidth sx={{ gap: 1 }} id="image">
+                                <FormLabel>Image</FormLabel>
+                                <CloudinaryUploadWidget uploadImage={uploadImage} />
+                                {formData.image && (
+                                    <img
+                                        id="uploadedimage"
+                                        src={formData.image}
+                                        style={{
+                                            width: "100px",
+                                            height: "100px",
+                                            objectFit: "cover",
+                                            marginTop: "8px",
+                                            border: "1px solid #ddd",
+                                            borderRadius: "4px",
+                                        }}
+                                        alt="uploadedimage"
+                                    />
+                                )}
+                            </FormControl>
+                        </Box>
+
+                        <Grid container spacing={2} sx={{ mt: 3, alignItems: "flex-end" }}>
+                            <Grid size={{ xs: 12, sm: 4 }}>
+                                <TextField
+                                    id="price"
+                                    fullWidth
+                                    label="Price"
+                                    type="number"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    placeholder="0"
+                                    required
+                                    name="price"
+                                />
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 4 }}>
+                                <FormControl fullWidth>
+                                    <FormLabel>Category</FormLabel>
+                                    <Select
+                                        id="category"
+                                        multiple
+                                        value={formData.category}
+                                        onChange={onHandleCategory}
+                                    >
+                                        {CATEGORY.map((item, idx) => (
+                                            <MenuItem key={idx} value={item.toLowerCase()}>
+                                                {item}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 4 }}>
+                                <FormControl fullWidth>
+                                    <FormLabel>Status</FormLabel>
+                                    <Select
+                                        id="status"
+                                        name="status"
+                                        value={formData.status}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        {STATUS.map((item, idx) => (
+                                            <MenuItem key={idx} value={item}>
+                                                {item}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </DialogContent>
+
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button variant="contained" type="submit">
+                        {mode === "new" ? "Submit" : "Edit"}
+                    </Button>
+                </DialogActions>
+            </Box>
         </Dialog>
     );
 };
