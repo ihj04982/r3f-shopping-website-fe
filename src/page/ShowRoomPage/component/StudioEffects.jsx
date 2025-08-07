@@ -1,39 +1,24 @@
-import React, { useRef, useMemo } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import React, { useMemo } from "react";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-// 스튜디오 바닥
-export function StudioFloor() {
-    return (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} receiveShadow>
-            <planeGeometry args={[50, 50]} />
-            <meshStandardMaterial color="#1a1a1a" metalness={0.2} roughness={0.6} envMapIntensity={0.5} />
-        </mesh>
-    );
-}
-
-// 밝은 회색 그라데이션 배경
-export function StudioBackground() {
+export function DomeBackground() {
     const gradientTexture = useMemo(() => {
         const canvas = document.createElement("canvas");
-        canvas.width = 512;
+        canvas.width = 2;
         canvas.height = 512;
         const ctx = canvas.getContext("2d");
 
-        // 밝은 회색 그라데이션
-        const gradient = ctx.createRadialGradient(256, 200, 100, 256, 256, 400);
-        gradient.addColorStop(0, "#9090a0");
-        gradient.addColorStop(0.5, "#707080");
-        gradient.addColorStop(1, "#505060");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 512, 512);
+        const gradient = ctx.createLinearGradient(0, 0, 0, 512);
+        gradient.addColorStop(0, "#0F1521"); // 위: 어두운 남색
+        gradient.addColorStop(0.2, "#1a2938");
+        gradient.addColorStop(0.4, "#296283"); // 중간: 청색
+        gradient.addColorStop(0.6, "#5080a0");
+        gradient.addColorStop(0.8, "#90a0b0");
+        gradient.addColorStop(1, "#D2D3D5"); // 아래: 밝은 회색
 
-        // 노이즈 텍스처 추가
-        for (let i = 0; i < 5000; i++) {
-            const brightness = 80 + Math.random() * 40;
-            ctx.fillStyle = `rgba(${brightness}, ${brightness}, ${brightness}, ${Math.random() * 0.03})`;
-            ctx.fillRect(Math.random() * 512, Math.random() * 512, 1, 1);
-        }
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 2, 512);
 
         const texture = new THREE.CanvasTexture(canvas);
         texture.needsUpdate = true;
@@ -41,25 +26,13 @@ export function StudioBackground() {
     }, []);
 
     return (
-        <>
-            <mesh position={[0, 10, -20]} scale={[80, 40, 1]}>
-                <planeGeometry />
-                <meshBasicMaterial map={gradientTexture} />
-            </mesh>
-
-            <mesh position={[-30, 10, 0]} rotation={[0, Math.PI / 2, 0]} scale={[80, 40, 1]}>
-                <planeGeometry />
-                <meshBasicMaterial color="#606070" />
-            </mesh>
-            <mesh position={[30, 10, 0]} rotation={[0, -Math.PI / 2, 0]} scale={[80, 40, 1]}>
-                <planeGeometry />
-                <meshBasicMaterial color="#606070" />
-            </mesh>
-        </>
+        <mesh scale={[-1, 1, 1]}>
+            <sphereGeometry args={[50, 32, 32]} />
+            <meshBasicMaterial map={gradientTexture} side={THREE.BackSide} depthWrite={false} />
+        </mesh>
     );
 }
 
-// 노이즈 오버레이 (필름 그레인)
 export function FilmGrain() {
     const { viewport } = useThree();
 
@@ -77,7 +50,7 @@ export function FilmGrain() {
             data[i] = noise;
             data[i + 1] = noise;
             data[i + 2] = noise;
-            data[i + 3] = 15;
+            data[i + 3] = 40;
         }
 
         ctx.putImageData(imageData, 0, 0);
@@ -92,7 +65,7 @@ export function FilmGrain() {
             <meshBasicMaterial
                 map={noiseTexture}
                 transparent
-                opacity={0.05}
+                opacity={0.04}
                 blending={THREE.AdditiveBlending}
                 depthWrite={false}
             />
@@ -103,21 +76,33 @@ export function FilmGrain() {
 // 텁텁한 공기를 위한 안개 박스
 export function HazyAir() {
     return (
-        <mesh position={[0, 3, 0]}>
-            <boxGeometry args={[20, 10, 20]} />
-            <meshBasicMaterial color="#808090" transparent opacity={0.05} depthWrite={false} />
-        </mesh>
+        <>
+            <mesh position={[0, 3, 0]}>
+                <boxGeometry args={[25, 12, 25]} />
+                <meshBasicMaterial color="#296283" transparent opacity={0.08} depthWrite={false} />
+            </mesh>
+
+            <mesh position={[0, 5, -2]}>
+                <boxGeometry args={[30, 15, 20]} />
+                <meshBasicMaterial color="#0F1521" transparent opacity={0.06} depthWrite={false} />
+            </mesh>
+
+            <mesh position={[0, 1, 3]}>
+                <boxGeometry args={[20, 8, 15]} />
+                <meshBasicMaterial color="#296283" transparent opacity={0.05} depthWrite={false} />
+            </mesh>
+        </>
     );
 }
 
-// 스튜디오 조명
+// 스튜디오 조명 (새로운 색상 톤)
 export function StudioLights() {
     return (
         <>
             <directionalLight
-                position={[5, 10, 5]}
-                intensity={1.2}
-                color="#f0f0f0"
+                position={[3, 8, 5]}
+                intensity={0.9}
+                color="#F2F2F2"
                 castShadow
                 shadow-mapSize={[2048, 2048]}
                 shadow-camera-far={20}
@@ -127,13 +112,11 @@ export function StudioLights() {
                 shadow-camera-bottom={-10}
             />
 
-            <directionalLight position={[-5, 5, 0]} intensity={0.5} color="#e0e0f0" />
+            {/* <directionalLight position={[-5, 3, 2]} intensity={0.3} color="#D2D3D5" /> */}
 
-            <pointLight position={[0, 2, 3]} intensity={1} color="#00ffcc" distance={10} />
+            <spotLight position={[0, 4, 4]} angle={Math.PI / 5} intensity={5} color="#B0C0D0" penumbra={0.4} />
 
-            <spotLight position={[0, 5, -5]} angle={Math.PI / 3} intensity={0.8} color="#a0a0b0" penumbra={0.5} />
-
-            <ambientLight intensity={0.6} color="#808090" />
+            {/* <ambientLight intensity={0.45} color="#7090a0" /> */}
         </>
     );
 }
