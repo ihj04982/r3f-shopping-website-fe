@@ -78,7 +78,7 @@ const AppLayout = ({ children }) => {
                     {/* Desktop: Sidebar */}
                     <Box
                         sx={{
-                            width: "25%",
+                            width: "18%",
                             bgcolor: "background.paper",
                             borderRight: 1,
                             borderColor: "divider",
