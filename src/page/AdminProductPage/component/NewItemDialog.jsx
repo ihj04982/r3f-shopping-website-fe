@@ -77,7 +77,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         setStock([]);
         setValidationError("");
         setShowDialog(false);
-        dispatch(getProductList({ page: query.get("page") || 1, name: query.get("name") || "" }));
     };
 
     const handleSubmit = (event) => {
@@ -106,8 +105,9 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
             dispatch(createProduct({ ...formData, stock: stockObject }));
         } else {
             // 상품 수정하기
-            dispatch(editProduct({ ...formData, stock: stockObject }));
+            dispatch(editProduct({ id: selectedProduct._id, ...formData, stock: stockObject }));
         }
+        setShowDialog(false);
     };
 
     const handleChange = (event) => {
@@ -273,6 +273,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                                                     id="stock"
                                                     fullWidth
                                                     type="number"
+                                                    inputProps={{ min: 0 }}
                                                     placeholder="number of stock"
                                                     value={item[1]}
                                                     onChange={(event) => handleStockChange(event.target.value, index)}

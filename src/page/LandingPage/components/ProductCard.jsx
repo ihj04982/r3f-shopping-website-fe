@@ -2,10 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { currencyFormat } from "../../../utils/number";
+import { setSelectedProduct } from "../../../features/product/productSlice";
+import { useDispatch } from "react-redux";
 
 const ProductCard = ({ item }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const showProduct = (id) => {
+        dispatch(setSelectedProduct(item));
         navigate(`/product/${id}`);
     };
 

@@ -20,9 +20,9 @@ import {
 const ProductDetail = () => {
     const dispatch = useDispatch();
     const { selectedProduct, loading } = useSelector((state) => state.product);
-    const [size, setSize] = useState("");
+    const [color, setColor] = useState("");
     const { id } = useParams();
-    const [sizeError, setSizeError] = useState(false);
+    const [colorError, setColorError] = useState(false);
 
     const addItemToCart = () => {
         //사이즈를 아직 선택안했다면 에러
@@ -31,8 +31,8 @@ const ProductDetail = () => {
     };
 
     const selectSize = (value) => {
-        setSize(value);
-        setSizeError(false);
+        setColor(value);
+        setColorError(false);
     };
 
     useEffect(() => {
@@ -50,14 +50,14 @@ const ProductDetail = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Grid container spacing={4}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <img
                         src={selectedProduct.image}
                         style={{ width: "100%", height: "auto" }}
                         alt={selectedProduct.name}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                         <Typography variant="h4" component="h1">
                             {selectedProduct.name}
@@ -69,11 +69,16 @@ const ProductDetail = () => {
                             {selectedProduct.description}
                         </Typography>
 
-                        <FormControl fullWidth error={sizeError}>
-                            <FormLabel>사이즈 선택</FormLabel>
-                            <Select value={size} onChange={(event) => selectSize(event.target.value)} displayEmpty>
+                        <FormControl fullWidth error={colorError}>
+                            <FormLabel>색상 선택</FormLabel>
+                            <Select
+                                value={color}
+                                onChange={(event) => selectSize(event.target.value)}
+                                required
+                                displayEmpty
+                            >
                                 <MenuItem value="" disabled>
-                                    사이즈 선택
+                                    색상 선택
                                 </MenuItem>
                                 {Object.keys(selectedProduct.stock).length > 0 &&
                                     Object.keys(selectedProduct.stock).map((item, index) => (
@@ -84,10 +89,16 @@ const ProductDetail = () => {
                             </Select>
                         </FormControl>
 
-                        {sizeError && <Alert severity="error">사이즈를 선택해주세요.</Alert>}
+                        {colorError && <Alert severity="error">색상을 선택해주세요.</Alert>}
 
-                        <Button variant="contained" size="large" onClick={addItemToCart} sx={{ mt: 2 }}>
-                            추가
+                        <Button
+                            variant="contained"
+                            size="large"
+                            disabled={color === ""}
+                            onClick={addItemToCart}
+                            sx={{ mt: 2, width: "100%" }}
+                        >
+                            Add to Cart
                         </Button>
                     </Box>
                 </Grid>

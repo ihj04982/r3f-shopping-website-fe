@@ -25,6 +25,7 @@ export const createProduct = createAsyncThunk(
             const response = await api.post("/product", formData);
             if (response.status === 200) {
                 dispatch(showToastMessage({ status: "success", message: "상품이 등록되었습니다." }));
+                dispatch(getProductList({ page: 1 }));
                 return response.data.data;
             } else {
                 throw new Error("상품 등록에 실패했습니다.");
@@ -35,14 +36,37 @@ export const createProduct = createAsyncThunk(
     }
 );
 
-export const deleteProduct = createAsyncThunk(
-    "products/deleteProduct",
-    async (id, { dispatch, rejectWithValue }) => {}
-);
+export const deleteProduct = createAsyncThunk("products/deleteProduct", async (id, { dispatch, rejectWithValue }) => {
+    try {
+        const response = await api.delete(`/product/${id}`);
+        if (response.status === 200) {
+            dispatch(showToastMessage({ status: "success", message: "상품이 삭제되었습니다." }));
+            dispatch(getProductList({ page: 1 }));
+            return response.data.data;
+        } else {
+            throw new Error("상품 삭제에 실패했습니다.");
+        }
+    } catch (error) {
+        return rejectWithValue(error.message);
+    }
+});
 
 export const editProduct = createAsyncThunk(
     "products/editProduct",
-    async ({ id, ...formData }, { dispatch, rejectWithValue }) => {}
+    async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await api.put(`/product/${id}`, formData);
+            if (response.status === 200) {
+                dispatch(showToastMessage({ status: "success", message: "상품이 수정되었습니다." }));
+                dispatch(getProductList({ page: 1 }));
+                return response.data.data;
+            } else {
+                throw new Error("상품 수정에 실패했습니다.");
+            }
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
 );
 
 // 슬라이스 생성
@@ -92,6 +116,32 @@ const productSlice = createSlice({
                 state.success = true;
             })
             .addCase(createProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.success = false;
+            })
+            .addCase(editProduct.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(editProduct.fulfilled, (state) => {
+                state.loading = false;
+                state.error = "";
+                state.success = true;
+            })
+            .addCase(editProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.success = false;
+            })
+            .addCase(deleteProduct.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(deleteProduct.fulfilled, (state) => {
+                state.loading = false;
+                state.error = "";
+                state.success = true;
+            })
+            .addCase(deleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.success = false;
