@@ -49,10 +49,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     }, [success]);
 
     useEffect(() => {
-        if (error || !success) {
-            dispatch(clearError());
-        }
         if (showDialog) {
+            setValidationError("");
+            if (error) {
+                dispatch(clearError());
+            }
+
             if (mode === "edit") {
                 setFormData(selectedProduct);
                 // 객체형태로 온 stock을 다시 배열로 세팅해주기
@@ -66,7 +68,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
                 setStock([]);
             }
         }
-    }, [showDialog]);
+    }, [showDialog, mode, selectedProduct, error, dispatch]);
 
     const handleClose = () => {
         //모든걸 초기화시키고;
