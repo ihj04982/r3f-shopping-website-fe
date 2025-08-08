@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormat } from "../../utils/number";
 import { getProductDetail } from "../../features/product/productSlice";
+import LoadingSpinner from "../../common/component/LoadingSpinner";
 import {
     Container,
     Grid,
@@ -38,7 +39,13 @@ const ProductDetail = () => {
         dispatch(getProductDetail(id));
     }, [id, dispatch]);
 
-    if (loading || !selectedProduct) return <div>Loading...</div>;
+    if (loading || !selectedProduct) {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                <LoadingSpinner size={60} message="상품 정보를 불러오는 중..." />
+            </Box>
+        );
+    }
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>

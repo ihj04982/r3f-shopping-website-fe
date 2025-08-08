@@ -5,12 +5,13 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
 import SearchBox from "../../common/component/SearchBox";
+import LoadingSpinner from "../../common/component/LoadingSpinner";
 
 const LandingPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const productList = useSelector((state) => state.product.productList);
+    const { productList, loading } = useSelector((state) => state.product);
     const [query] = useSearchParams();
     const name = query.get("name");
     const [searchQuery, setSearchQuery] = useState({
@@ -44,23 +45,30 @@ const LandingPage = () => {
                     field="name"
                 />
             </Box>
-            <Grid container spacing={3}>
-                {productList.length > 0 ? (
-                    productList.map((item) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item._id}>
-                            <ProductCard item={item} />
+
+            {loading ? (
+                <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                    <LoadingSpinner size={60} message="상품을 불러오는 중..." />
+                </Box>
+            ) : (
+                <Grid container spacing={3}>
+                    {productList.length > 0 ? (
+                        productList.map((item) => (
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item._id}>
+                                <ProductCard item={item} />
+                            </Grid>
+                        ))
+                    ) : (
+                        <Grid size={{ xs: 12 }}>
+                            <Box sx={{ textAlign: "center", py: 4 }}>
+                                <Typography variant="h4">
+                                    {name === "" ? "등록된 상품이 없습니다!" : `${name}과 일치한 상품이 없습니다!`}
+                                </Typography>
+                            </Box>
                         </Grid>
-                    ))
-                ) : (
-                    <Grid size={{ xs: 12 }}>
-                        <Box sx={{ textAlign: "center", py: 4 }}>
-                            <Typography variant="h4">
-                                {name === "" ? "등록된 상품이 없습니다!" : `${name}과 일치한 상품이 없습니다!`}
-                            </Typography>
-                        </Box>
-                    </Grid>
-                )}
-            </Grid>
+                    )}
+                </Grid>
+            )}
         </Container>
     );
 };
