@@ -5,9 +5,17 @@ import { useLoader } from "@react-three/fiber";
 import { useThree } from "@react-three/fiber";
 import { CameraControls, ContactShadows, Float } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module";
 
 const ShowRoom = ({ selectedColor, isRotating }) => {
-    const gltf = useLoader(GLTFLoader, "/models/sunglasses.glb");
+    const gltf = useLoader(
+        GLTFLoader,
+        " https://7usit4sojdl2b6ev.public.blob.vercel-storage.com/models/sunglasses_v1.glb",
+        (loader) => {
+            loader.setMeshoptDecoder(MeshoptDecoder);
+        }
+    );
+
     const { raycaster } = useThree();
     const cameraControlsRef = useRef(null);
     const modelRef = useRef(null);
