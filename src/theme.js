@@ -326,11 +326,6 @@ const theme = createTheme({
                     backgroundColor: "#ffffff",
                     borderRadius: 12,
                     border: "1px solid #e8eaed",
-                    transition: "all 300ms cubic-bezier(0.16, 1, 0.3, 1)",
-                    "&:hover": {
-                        transform: "translateY(-1px)",
-                        boxShadow: "0px 6px 0px 2px #e8eaed",
-                    },
                 },
             },
         },

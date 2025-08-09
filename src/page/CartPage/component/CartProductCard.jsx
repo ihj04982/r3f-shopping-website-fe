@@ -17,50 +17,53 @@ const CartProductCard = ({ item }) => {
     };
 
     return (
-        <Card sx={{ mb: 2 }}>
+        <Card sx={{ mb: 2, border: "1px solid #e0e0e0" }}>
             <CardContent>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={2}>
+                <Grid container spacing={2} sx={{ alignItems: "center" }}>
+                    <Grid size={{ md: 3 }}>
                         <img
                             src={item.productId.image}
-                            style={{ width: "100%", maxWidth: "112px", height: "auto" }}
+                            style={{ width: "100%", maxWidth: "125px", height: "auto" }}
                             alt="product"
                         />
                     </Grid>
-                    <Grid item xs={12} md={10}>
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1 }}>
-                            <Typography variant="h6" component="h3">
-                                {item.productId.name}
-                            </Typography>
+                    <Grid size={{ md: 9 }} sx={{ flexGrow: 1 }}>
+                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                            <Typography variant="body1">{item.productId.name}</Typography>
                             <IconButton onClick={() => deleteCart(item._id)} color="error" size="small">
                                 <DeleteIcon />
                             </IconButton>
                         </Box>
 
-                        <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1 }}>
-                            ₩ {currencyFormat(item.productId.price)}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                            Size: {item.size}
-                        </Typography>
-                        <Typography variant="body1" sx={{ fontWeight: "bold", mb: 1 }}>
-                            Total: ₩ {currencyFormat(item.productId.price * item.qty)}
-                        </Typography>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                            <Typography variant="body2">Quantity:</Typography>
-                            <FormControl size="small" sx={{ minWidth: 80 }}>
-                                <Select
-                                    value={item.qty}
-                                    onChange={(event) => handleQtyChange(item._id, event.target.value)}
-                                    displayEmpty
-                                >
-                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                                        <MenuItem key={num} value={num}>
-                                            {num}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                            }}
+                        >
+                            <Typography variant="body2">Color: {item.color}</Typography>
+                            <Typography variant="body2">
+                                Total: ₩{currencyFormat(item.productId.price * item.qty)}
+                            </Typography>
+                            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+                                <Typography variant="body2">수량</Typography>
+                                <FormControl size="small" sx={{ minWidth: 50 }}>
+                                    <Select
+                                        value={item.qty}
+                                        onChange={(event) => handleQtyChange(item._id, Number(event.target.value))}
+                                        displayEmpty
+                                        size="small"
+                                        variant="standard"
+                                    >
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                                            <MenuItem key={num} value={num}>
+                                                {num}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>

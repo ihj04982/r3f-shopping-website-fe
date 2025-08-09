@@ -32,7 +32,7 @@ import { useSelector } from "react-redux";
 const Navbar = ({ user }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-    const { cartItemCount } = useSelector((state) => state?.cart || { cartItemCount: 0 });
+    const { cartItemCount } = useSelector((state) => state.cart);
     const [showSearchBox, setShowSearchBox] = useState(false);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [searchKeyword, setSearchKeyword] = useState("");

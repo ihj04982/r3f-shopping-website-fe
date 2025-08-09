@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { currencyFormat } from "../../utils/number";
 import { getProductDetail } from "../../features/product/productSlice";
@@ -16,6 +16,7 @@ import {
     Box,
     Alert,
 } from "@mui/material";
+import { addToCart } from "../../features/cart/cartSlice";
 
 const ProductDetail = () => {
     const dispatch = useDispatch();
@@ -23,16 +24,30 @@ const ProductDetail = () => {
     const [color, setColor] = useState("");
     const { id } = useParams();
     const [colorError, setColorError] = useState(false);
+    const user = useSelector((state) => state.user.user);
+    const navigate = useNavigate();
 
     const addItemToCart = () => {
         //사이즈를 아직 선택안했다면 에러
+        if (color === "") {
+            setColorError(true);
+            return;
+        }
+
         // 아직 로그인을 안한유저라면 로그인페이지로
+        if (!user) {
+            navigate("/login");
+            return;
+        }
         // 카트에 아이템 추가하기
+        dispatch(addToCart({ id, color }));
     };
 
     const selectSize = (value) => {
         setColor(value);
-        setColorError(false);
+        if (colorError) {
+            setColorError(false);
+        }
     };
 
     useEffect(() => {
@@ -58,24 +73,24 @@ const ProductDetail = () => {
                     />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                        <Typography variant="h4" component="h1">
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <Typography variant="h5" component="h5">
                             {selectedProduct.name}
                         </Typography>
-                        <Typography variant="h5" color="primary" sx={{ fontWeight: "bold" }}>
-                            ₩ {currencyFormat(selectedProduct.price)}
+                        <Typography variant="body1" color="primary">
+                            ₩{currencyFormat(selectedProduct.price)}
                         </Typography>
                         <Typography variant="body1" color="text.secondary">
                             {selectedProduct.description}
                         </Typography>
 
                         <FormControl fullWidth error={colorError}>
-                            <FormLabel>색상 선택</FormLabel>
                             <Select
                                 value={color}
                                 onChange={(event) => selectSize(event.target.value)}
                                 required
                                 displayEmpty
+                                size="small"
                             >
                                 <MenuItem value="" disabled>
                                     색상 선택
@@ -93,9 +108,9 @@ const ProductDetail = () => {
 
                         <Button
                             variant="contained"
-                            size="large"
                             disabled={color === ""}
                             onClick={addItemToCart}
+                            size="large"
                             sx={{ mt: 2, width: "100%" }}
                         >
                             Add to Cart
