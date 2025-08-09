@@ -35,7 +35,7 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
                             >
                                 <Typography variant="body2">{item.productId.name}</Typography>
                                 <Typography variant="body2" sx={{ fontWeight: "medium" }}>
-                                    ₩{currencyFormat(item.productId.price)}
+                                    ₩{currencyFormat(item.productId.price * item.qty)}
                                 </Typography>
                             </Box>
                         </ListItem>
