@@ -1,12 +1,18 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
+import LoadingSpinner from "../common/component/LoadingSpinner";
 
 const PrivateRoute = ({ permissionLevel }) => {
-    const user = useSelector((state) => state.user.user);
-    const isAuthenticated = user?.level === permissionLevel || user?.level === "admin";
+    const userState = useSelector((state) => state.user) || {};
+    const { user, loading, initialized } = userState;
+    const isAuthenticated = !!user && (user.level === permissionLevel || user.level === "admin");
 
-    return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+    if (!initialized || loading) {
+        return <LoadingSpinner fullScreen message="세션 확인 중..." />;
+    }
+
+    return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default PrivateRoute;

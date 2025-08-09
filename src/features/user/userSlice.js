@@ -61,6 +61,7 @@ const userSlice = createSlice({
         loginError: null,
         registrationError: null,
         success: false,
+        initialized: false,
     },
     reducers: {
         clearErrors: (state) => {
@@ -99,14 +100,17 @@ const userSlice = createSlice({
             })
             .addCase(loginWithToken.pending, (state) => {
                 state.loading = true;
+                state.initialized = false;
             })
             .addCase(loginWithToken.fulfilled, (state, action) => {
                 state.loading = false;
                 state.user = action.payload.user;
+                state.initialized = true;
             })
             .addCase(loginWithToken.rejected, (state) => {
                 state.loading = false;
                 state.user = null;
+                state.initialized = true;
             });
     },
 });
