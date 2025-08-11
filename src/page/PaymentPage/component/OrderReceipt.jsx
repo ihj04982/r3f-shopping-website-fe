@@ -6,6 +6,7 @@ import { currencyFormat } from "../../../utils/number";
 const OrderReceipt = ({ cartList, totalPrice }) => {
     const location = useLocation();
     const navigate = useNavigate();
+    console.log(cartList);
 
     return (
         <Box
@@ -22,7 +23,7 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
                 주문 내역
             </Typography>
             <List>
-                {cartList.length > 0 &&
+                {cartList?.length > 0 &&
                     cartList.map((item) => (
                         <ListItem key={item._id}>
                             <Box
@@ -62,7 +63,13 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
 
             {location.pathname.includes("/cart") && (
                 <Box>
-                    <Button variant="contained" fullWidth sx={{ mb: 2 }} onClick={() => navigate("/payment")}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        disabled={cartList.length === 0}
+                        onClick={() => navigate("/payment")}
+                    >
                         결제 계속하기
                     </Button>
                     <Button variant="outlined" fullWidth sx={{ mb: 2 }} onClick={() => navigate("/")}>

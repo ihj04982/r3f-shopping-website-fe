@@ -5,10 +5,12 @@ import { useSelector, useDispatch } from "react-redux";
 import OrderReceipt from "./component/OrderReceipt";
 import PaymentForm from "./component/PaymentForm";
 import { createOrder } from "../../features/order/orderSlice";
+import { cc_expires_format } from "../../utils/number";
 
 const PaymentPage = () => {
     const dispatch = useDispatch();
     const { orderNum } = useSelector((state) => state.order);
+    const { cartList, totalPrice } = useSelector((state) => state.cart);
     const [cardValue, setCardValue] = useState({
         cvc: "",
         expiry: "",
@@ -32,7 +34,21 @@ const PaymentPage = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // 오더 생성하기
+
+        const { firstName, lastName, contact, address, city, zip } = shipInfo;
+        dispatch(
+            createOrder({
+                totalPrice,
+                shipTo: { address, city, zip },
+                contact: { firstName, lastName, contact },
+                orderList: cartList.map((item) => ({
+                    productId: item._id,
+                    quantity: item.qty,
+                    price: item.price,
+                    color: item.color,
+                })),
+            })
+        );
     };
 
     const handleFormChange = (event) => {
@@ -45,15 +61,60 @@ const PaymentPage = () => {
 
     const handlePaymentInfoChange = (event) => {
         const { name, value } = event.target;
+        let formattedValue = value;
+
+        if (name === "number") {
+            const cleaned = value.replace(/\s/g, "");
+            const groups = cleaned.match(/.{1,4}/g);
+            formattedValue = groups ? groups.join(" ") : cleaned;
+        }
+
+        if (name === "expiry") {
+            formattedValue = cc_expires_format(value);
+        }
+
         setCardValue((prev) => ({
             ...prev,
-            [name]: value,
+            [name]: formattedValue,
         }));
     };
 
     const handleInputFocus = (e) => {
         setCardValue({ ...cardValue, focus: e.target.name });
     };
+
+    const isPaymentFormValid = () => {
+        const { number, name, expiry, cvc } = cardValue;
+        const { firstName, lastName, contact, address, city, zip } = shipInfo;
+
+        if (!firstName || !lastName || !contact || !address || !city || !zip) {
+            return false;
+        }
+
+        // Check payment info
+        if (!number || !name || !expiry || !cvc) {
+            return false;
+        }
+
+        const cardNumber = number.replace(/\s/g, "");
+        if (cardNumber.length < 13 || cardNumber.length > 19) {
+            return false;
+        }
+
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+            return false;
+        }
+
+        if (cvc.length < 3 || cvc.length > 4) {
+            return false;
+        }
+
+        return true;
+    };
+
+    if (cartList.length === 0) {
+        navigate("/cart");
+    }
 
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -74,6 +135,7 @@ const PaymentPage = () => {
                                         onChange={handleFormChange}
                                         required
                                         variant="outlined"
+                                        size="small"
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -85,6 +147,7 @@ const PaymentPage = () => {
                                         onChange={handleFormChange}
                                         required
                                         variant="outlined"
+                                        size="small"
                                     />
                                 </Grid>
                             </Grid>
@@ -99,6 +162,7 @@ const PaymentPage = () => {
                                 required
                                 variant="outlined"
                                 sx={{ mb: 3 }}
+                                size="small"
                             />
 
                             <TextField
@@ -111,6 +175,7 @@ const PaymentPage = () => {
                                 required
                                 variant="outlined"
                                 sx={{ mb: 3 }}
+                                size="small"
                             />
 
                             <Grid container spacing={3} sx={{ mb: 3 }}>
@@ -123,6 +188,7 @@ const PaymentPage = () => {
                                         onChange={handleFormChange}
                                         required
                                         variant="outlined"
+                                        size="small"
                                     />
                                 </Grid>
                                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -134,12 +200,13 @@ const PaymentPage = () => {
                                         onChange={handleFormChange}
                                         required
                                         variant="outlined"
+                                        size="small"
                                     />
                                 </Grid>
                             </Grid>
 
                             <Box sx={{ display: { xs: "block", lg: "none" }, mb: 3 }}>
-                                <OrderReceipt />
+                                <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                             </Box>
 
                             <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
@@ -157,6 +224,7 @@ const PaymentPage = () => {
                                 type="submit"
                                 fullWidth
                                 size="large"
+                                disabled={!isPaymentFormValid()}
                                 sx={{
                                     mt: 3,
                                     py: 1.5,
@@ -171,7 +239,7 @@ const PaymentPage = () => {
                 </Grid>
                 <Grid size={{ xs: 12, lg: 5 }}>
                     <Box sx={{ display: { xs: "none", lg: "block" } }}>
-                        <OrderReceipt />
+                        <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                     </Box>
                 </Grid>
             </Grid>
