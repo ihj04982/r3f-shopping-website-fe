@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { loginWithEmail } from "../../features/user/userSlice";
 import { clearErrors } from "../../features/user/userSlice";
 import { Container, TextField, Button, Alert, Box, Typography, Divider, Paper } from "@mui/material";
-
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -27,8 +24,8 @@ const Login = () => {
         dispatch(loginWithEmail({ email, password }));
     };
 
-    const handleGoogleLogin = async () => {
-        //구글 로그인 하기
+    const handleGoogleLogin = async (credentialResponse) => {
+        console.log(credentialResponse);
     };
 
     if (user) {
@@ -99,14 +96,12 @@ const Login = () => {
                     </Divider>
 
                     <Box sx={{ display: "flex", justifyContent: "center" }}>
-                        <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-                            <GoogleLogin
-                                onSuccess={handleGoogleLogin}
-                                onError={() => {
-                                    console.log("Login Failed");
-                                }}
-                            />
-                        </GoogleOAuthProvider>
+                        <GoogleLogin
+                            onSuccess={handleGoogleLogin}
+                            onError={() => {
+                                console.log("Login Failed");
+                            }}
+                        />
                     </Box>
                 </Box>
             </Paper>

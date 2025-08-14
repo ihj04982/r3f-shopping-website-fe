@@ -27,9 +27,14 @@ const PaymentPage = () => {
         city: "",
         zip: "",
     });
+    const [firstLoading, setFirstLoading] = useState(true);
 
     useEffect(() => {
-        // 오더번호를 받으면 어디로 갈까?
+        if (firstLoading) {
+            setFirstLoading(false);
+        } else if (orderNum !== "") {
+            navigate("/payment/success");
+        }
     }, [orderNum]);
 
     const handleSubmit = (event) => {
