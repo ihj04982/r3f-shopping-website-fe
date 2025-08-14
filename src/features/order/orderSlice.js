@@ -22,6 +22,7 @@ export const createOrder = createAsyncThunk("order/createOrder", async (payload,
         } else {
             throw new Error("주문이 실패했습니다.");
         }
+        dispatch(getCartQty());
         return response.data.orderNum;
     } catch (error) {
         dispatch(showToastMessage({ status: "error", message: error.message }));

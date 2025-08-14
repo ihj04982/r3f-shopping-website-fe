@@ -41,12 +41,14 @@ const PaymentPage = () => {
                 totalPrice,
                 shipTo: { address, city, zip },
                 contact: { firstName, lastName, contact },
-                orderList: cartList.map((item) => ({
-                    productId: item._id,
-                    quantity: item.qty,
-                    price: item.price,
-                    color: item.color,
-                })),
+                orderList: cartList.map((item) => {
+                    return {
+                        productId: item.productId._id,
+                        qty: item.qty,
+                        price: item.productId.price,
+                        color: item.color,
+                    };
+                }),
             })
         );
     };
