@@ -9,10 +9,11 @@ import {
     Paper,
     Box,
     IconButton,
+    Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { currencyFormat } from "../../../utils/number";
-
+import { badgeBg } from "../../../constants/order.constants";
 const OrderTable = ({ header, data, openEditForm }) => {
     return (
         <Box sx={{ overflowX: "auto" }}>
@@ -54,7 +55,22 @@ const OrderTable = ({ header, data, openEditForm }) => {
                                         {item.shipTo?.address} {item.shipTo?.city}
                                     </TableCell>
                                     <TableCell>{currencyFormat(item.totalPrice)}</TableCell>
-                                    <TableCell>{item.status}</TableCell>
+                                    <TableCell>
+                                        <Typography
+                                            color={
+                                                badgeBg[item.status] === "success"
+                                                    ? "success"
+                                                    : badgeBg[item.status] === "danger"
+                                                    ? "error"
+                                                    : badgeBg[item.status] === "warning"
+                                                    ? "warning"
+                                                    : "default"
+                                            }
+                                            variant="body2"
+                                        >
+                                            {item.status}
+                                        </Typography>
+                                    </TableCell>
                                     <TableCell sx={{ minWidth: "100px" }}>
                                         <IconButton color="primary" size="small" onClick={() => openEditForm(item)}>
                                             <EditIcon />

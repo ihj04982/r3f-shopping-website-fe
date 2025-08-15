@@ -55,8 +55,7 @@ const OrderStatusCard = ({ orderItem }) => {
                         </Grid>
                         <Grid size={{ xs: 6, sm: 1, md: 1 }}>
                             <Box sx={{ textAlign: "left" }}>
-                                <Chip
-                                    label={orderItem.status}
+                                <Typography
                                     color={
                                         badgeBg[orderItem.status] === "success"
                                             ? "success"
@@ -66,9 +65,10 @@ const OrderStatusCard = ({ orderItem }) => {
                                             ? "warning"
                                             : "default"
                                     }
-                                    variant="filled"
-                                    size="small"
-                                />
+                                    variant="body2"
+                                >
+                                    {orderItem.status}
+                                </Typography>
                             </Box>
                         </Grid>
                         <Grid size={{ xs: 6, sm: 1, md: 1 }}>

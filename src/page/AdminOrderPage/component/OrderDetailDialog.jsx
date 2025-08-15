@@ -28,7 +28,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useDispatch, useSelector } from "react-redux";
 import { ORDER_STATUS } from "../../../constants/order.constants.js";
 import { currencyFormat } from "../../../utils/number";
-import { updateOrder, getOrderList, clearError } from "../../../features/order/orderSlice";
+import { updateOrder } from "../../../features/order/orderSlice";
 
 const OrderDetailDialog = ({ open, handleClose }) => {
     const selectedOrder = useSelector((state) => state.order.selectedOrder);
@@ -42,32 +42,16 @@ const OrderDetailDialog = ({ open, handleClose }) => {
         }
     }, [selectedOrder]);
 
-    useEffect(() => {
-        if (open) {
-            if (error) {
-                dispatch(clearError());
-            }
-        }
-    }, [open, error, dispatch]);
-
     const handleStatusChange = (event) => {
         setOrderStatus(event.target.value);
     };
 
     const submitStatus = async () => {
-        if (selectedOrder && orderStatus !== selectedOrder.status) {
-            const result = await dispatch(updateOrder({ id: selectedOrder._id, status: orderStatus }));
-            if (result.type === "order/updateOrder/fulfilled") {
-                handleClose();
-            }
-        } else {
+        if (selectedOrder) {
+            await dispatch(updateOrder({ id: selectedOrder._id, status: orderStatus }));
             handleClose();
         }
     };
-
-    if (!selectedOrder) {
-        return <></>;
-    }
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -222,11 +206,7 @@ const OrderDetailDialog = ({ open, handleClose }) => {
 
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button
-                        variant="contained"
-                        type="submit"
-                        disabled={loading || orderStatus === selectedOrder.status}
-                    >
+                    <Button variant="contained" type="submit" disabled={loading}>
                         {loading ? "처리중..." : "Edit"}
                     </Button>
                 </DialogActions>
