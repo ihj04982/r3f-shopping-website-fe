@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from "react";
+import { Container, Box, Pagination, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Container, Box, Pagination, PaginationItem } from "@mui/material";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import SearchBox from "../../common/component/SearchBox";
 import OrderDetailDialog from "./component/OrderDetailDialog";
 import OrderTable from "./component/OrderTable";
-import SearchBox from "../../common/component/SearchBox";
+import LoadingSpinner from "../../common/component/LoadingSpinner";
 import { getOrderList, setSelectedOrder } from "../../features/order/orderSlice";
-import ReactPaginate from "react-paginate";
 
 const AdminOrderPage = () => {
     const navigate = useNavigate();
     const [query] = useSearchParams();
     const dispatch = useDispatch();
-    const { orderList, totalPageNum } = useSelector((state) => state.order);
+    const { orderList, totalPageNum, loading } = useSelector((state) => state.order);
     const [searchQuery, setSearchQuery] = useState({
         page: query.get("page") || 1,
-        ordernum: query.get("ordernum") || "",
+        orderNum: query.get("orderNum") || "",
     });
     const [open, setOpen] = useState(false);
 
-    const tableHeader = ["#", "Order#", "Order Date", "User", "Order Item", "Address", "Total Price", "Status"];
+    const tableHeader = ["#", "Order#", "Order Date", "User", "Order Item", "Address", "Total Price", "Status", ""];
 
     useEffect(() => {
         dispatch(getOrderList({ ...searchQuery }));
     }, [query]);
 
     useEffect(() => {
-        if (searchQuery.ordernum === "") {
-            delete searchQuery.ordernum;
+        if (searchQuery.orderNum === "") {
+            delete searchQuery.orderNum;
         }
         const params = new URLSearchParams(searchQuery);
         const queryString = params.toString();
 
-        navigate("?" + queryString);
+        navigate(`?${queryString}`);
     }, [searchQuery]);
 
     const openEditForm = (order) => {
@@ -40,48 +40,47 @@ const AdminOrderPage = () => {
         dispatch(setSelectedOrder(order));
     };
 
-    const handlePageClick = ({ selected }) => {
-        setSearchQuery({ ...searchQuery, page: selected + 1 });
+    const handlePageChange = (event, newPage) => {
+        setSearchQuery({ ...searchQuery, page: newPage });
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
+    if (loading) {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+                <LoadingSpinner size={60} message="주문 내역을 불러오는 중..." />
+            </Box>
+        );
+    }
+
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", minHeight: "100vh" }}>
             <Container maxWidth="lg">
-                <Box sx={{ mt: 2, display: "flex", justifyContent: "center", mb: 2 }}>
+                <Box sx={{ mt: 2 }}>
                     <SearchBox
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
-                        placeholder="오더번호"
-                        field="ordernum"
+                        placeholder="주문번호로 검색"
+                        field="orderNum"
                     />
                 </Box>
 
                 <OrderTable header={tableHeader} data={orderList} openEditForm={openEditForm} />
-                <ReactPaginate
-                    nextLabel="next >"
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={5}
-                    pageCount={totalPageNum}
-                    forcePage={searchQuery.page - 1}
-                    previousLabel="< previous"
-                    renderOnZeroPageCount={null}
-                    pageClassName="page-item"
-                    pageLinkClassName="page-link"
-                    previousClassName="page-item"
-                    previousLinkClassName="page-link"
-                    nextClassName="page-item"
-                    nextLinkClassName="page-link"
-                    breakLabel="..."
-                    breakClassName="page-item"
-                    breakLinkClassName="page-link"
-                    containerClassName="pagination"
-                    activeClassName="active"
-                    className="display-center list-style-none"
-                />
+
+                {totalPageNum > 1 && (
+                    <Box sx={{ display: "flex", justifyContent: "center", mt: 3, mb: 3 }}>
+                        <Pagination
+                            count={totalPageNum}
+                            page={parseInt(searchQuery.page)}
+                            onChange={handlePageChange}
+                            color="primary"
+                            size="large"
+                        />
+                    </Box>
+                )}
             </Container>
 
             {open && <OrderDetailDialog open={open} handleClose={handleClose} />}

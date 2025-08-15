@@ -65,17 +65,17 @@ const AdminProductPage = () => {
     return (
         <Box sx={{ display: "flex", justifyContent: "center", minHeight: "100vh" }}>
             <Container maxWidth="lg">
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
                     <SearchBox
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                         placeholder="제품 이름으로 검색"
                         field="name"
                     />
+                    <Button variant="contained" sx={{ mt: 2, mb: 2 }} onClick={handleClickNewItem}>
+                        Add New Item +
+                    </Button>
                 </Box>
-                <Button variant="contained" sx={{ mt: 2, mb: 2 }} onClick={handleClickNewItem}>
-                    Add New Item +
-                </Button>
 
                 <ProductTable
                     header={tableHeader}

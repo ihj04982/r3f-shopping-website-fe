@@ -21,7 +21,7 @@ const AppRouter = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/showroom" element={<ShowRoomPage />} />
-            <Route element={<PrivateRoute permissionLevel="customer" />}>
+            <Route element={<PrivateRoute permissionLevel="user" />}>
                 <Route path="/cart" element={<CartPage />} />
                 <Route path="/payment" element={<PaymentPage />} />
                 <Route path="/payment/success" element={<OrderCompletePage />} />

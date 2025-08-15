@@ -3,12 +3,13 @@ import { useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import OrderStatusCard from "./component/OrderStatusCard.jsx";
+import LoadingSpinner from "../../common/component/LoadingSpinner.jsx";
 import { getOrder } from "../../features/order/orderSlice";
 import { logout } from "../../features/user/userSlice";
 
 const MyPage = () => {
     const dispatch = useDispatch();
-    const { orderList } = useSelector((state) => state.order);
+    const { orderList, loading } = useSelector((state) => state.order);
     console.log(orderList);
 
     useEffect(() => {
@@ -26,17 +27,25 @@ const MyPage = () => {
                     로그아웃
                 </Button>
             </Box>
-            <Box sx={{ padding: 3 }}>
-                {orderList.map((item) => (
-                    <OrderStatusCard orderItem={item} key={item._id} />
-                ))}
-            </Box>
-            {orderList?.length === 0 && (
-                <Box sx={{ padding: 3, textAlign: "center" }}>
-                    <Typography variant="h6" color="text.secondary">
-                        진행중인 주문이 없습니다.
-                    </Typography>
+            {loading ? (
+                <Box sx={{ padding: 3 }}>
+                    <LoadingSpinner message="주문 내역을 불러오는 중..." />
                 </Box>
+            ) : (
+                <>
+                    <Box sx={{ padding: 3 }}>
+                        {orderList.map((item) => (
+                            <OrderStatusCard orderItem={item} key={item._id} />
+                        ))}
+                    </Box>
+                    {orderList?.length === 0 && (
+                        <Box sx={{ padding: 3, textAlign: "center" }}>
+                            <Typography variant="h6" color="text.secondary">
+                                주문 내역이 없습니다.
+                            </Typography>
+                        </Box>
+                    )}
+                </>
             )}
         </Box>
     );

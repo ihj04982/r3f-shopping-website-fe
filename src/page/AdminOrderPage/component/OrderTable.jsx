@@ -1,50 +1,79 @@
 import React from "react";
-import { Table, Badge } from "@mui/material";
-import { badgeBg } from "../../../constants/order.constants.js";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Box,
+    IconButton,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import { currencyFormat } from "../../../utils/number";
 
 const OrderTable = ({ header, data, openEditForm }) => {
-  return (
-    <div className="overflow-x">
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            {header.map((title) => (
-              <th>{title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data.length > 0 ? (
-            data.map((item, index) => (
-              <tr onClick={() => openEditForm(item)}>
-                <th>{index}</th>
-                <th>{item.orderNum}</th>
-                <th>{item.createdAt.slice(0, 10)}</th>
-                <th>{item.userId.email}</th>
-                {item.items.length > 0 ? (
-                  <th>
-                    {item.items[0].productId.name}
-                    {item.items.length > 1 && `외 ${item.items.length - 1}개`}
-                  </th>
-                ) : (
-                  <th></th>
-                )}
-
-                <th>{item.shipTo.address + " " + item.shipTo.city}</th>
-
-                <th>{currencyFormat(item.totalPrice)}</th>
-                <th>
-                  <Badge bg={badgeBg[item.status]}>{item.status}</Badge>
-                </th>
-              </tr>
-            ))
-          ) : (
-            <tr>No Data to show</tr>
-          )}
-        </tbody>
-      </Table>
-    </div>
-  );
+    return (
+        <Box sx={{ overflowX: "auto" }}>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            {header.map((title, index) => (
+                                <TableCell key={index}>{title}</TableCell>
+                            ))}
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {data && data.length > 0 ? (
+                            data.map((item, index) => (
+                                <TableRow key={item._id}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{item.orderNum}</TableCell>
+                                    <TableCell>{item.createdAt.slice(0, 10)}</TableCell>
+                                    <TableCell>{item.userId?.email || "N/A"}</TableCell>
+                                    <TableCell sx={{ minWidth: "100px" }}>
+                                        {item.items.length > 0 ? (
+                                            <Box>
+                                                {item.items[0].productId?.name || "Unknown"}
+                                                {item.items.length > 1 && (
+                                                    <Box
+                                                        component="span"
+                                                        sx={{ color: "text.secondary", fontSize: "0.875rem" }}
+                                                    >
+                                                        외 {item.items.length - 1}개
+                                                    </Box>
+                                                )}
+                                            </Box>
+                                        ) : (
+                                            "No Items"
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {item.shipTo?.address} {item.shipTo?.city}
+                                    </TableCell>
+                                    <TableCell>{currencyFormat(item.totalPrice)}</TableCell>
+                                    <TableCell>{item.status}</TableCell>
+                                    <TableCell sx={{ minWidth: "100px" }}>
+                                        <IconButton color="primary" size="small" onClick={() => openEditForm(item)}>
+                                            <EditIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={header.length} align="center">
+                                    No Data to show
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Box>
+    );
 };
+
 export default OrderTable;
