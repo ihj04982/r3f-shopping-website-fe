@@ -1,6 +1,6 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Alert, Box, Button, Grid, Typography } from "@mui/material";
 import { Pause, PlayArrow } from "@mui/icons-material";
 import * as THREE from "three";
 import ShowRoom from "./component/ShowRoom";
@@ -10,6 +10,11 @@ import CustomizeToolbar from "./component/CustomizeToolbar";
 const ShowRoomPage = () => {
     const [partColors, setPartColors] = useState(DEFAULT_PART_COLORS);
     const [isRotating, setIsRotating] = useState(false);
+    const [showAlert, setShowAlert] = useState(true);
+
+    const handleCloseAlert = () => {
+        setShowAlert(false);
+    };
 
     const handlePartColorChange = (partType, colorId) => {
         setPartColors((prev) => {
@@ -24,7 +29,6 @@ const ShowRoomPage = () => {
 
     const handleAddToCart = () => {
         console.log("Add to cart clicked");
-        // TODO: 장바구니 기능 구현
     };
 
     return (
@@ -36,8 +40,8 @@ const ShowRoomPage = () => {
                 position: "relative",
             }}
         >
-            <Grid container sx={{ p: 4, height: "100%" }}>
-                <Grid size={{ xs: 12, md: 4 }}>
+            <Grid container sx={{ px: 8, py: 4, height: "100%" }}>
+                <Grid size={{ xs: 12, md: 4.5 }}>
                     <Box
                         sx={{
                             height: "100%",
@@ -47,15 +51,15 @@ const ShowRoomPage = () => {
                         }}
                     >
                         <Typography variant="overline" sx={{ mb: 1 }}>
-                            2025 컬렉션
+                            2025 Collection
                         </Typography>
-                        <Typography variant="h1" sx={{ mb: 3, fontWeight: 300 }}>
+                        <Typography variant="h1" sx={{ mb: 3, fontWeight: 500 }}>
                             Noona 02
                         </Typography>
 
                         <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-                            젠틀몬스터의 2025 주얼리 컬렉션을 소개합니다. 주얼리 디테일이 템플에 장식된 제품부터 진주
-                            목걸이를 연상시키는 스테이트먼트 피스에 이르기까지 주얼리의 화려함을 통해 젠틀몬스터만의
+                            PROJECT의 2025 주얼리 컬렉션을 소개합니다. 주얼리 디테일이 템플에 장식된 제품부터 진주
+                            목걸이를 연상시키는 스테이트먼트 피스에 이르기까지 주얼리의 화려함을 통해 PROJECT만의
                             독창적인 미적 감각을 드러내는 2025 컬렉션을 만나보세요.
                         </Typography>
                         <Box sx={{ mb: 4 }}>
@@ -83,7 +87,7 @@ const ShowRoomPage = () => {
                     </Box>
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 8 }}>
+                <Grid size={{ xs: 12, md: 7.5 }}>
                     <Canvas
                         camera={{ position: [0, 2, 8], fov: 45 }}
                         shadows="soft"
@@ -119,13 +123,34 @@ const ShowRoomPage = () => {
                         startIcon={isRotating ? <Pause /> : <PlayArrow />}
                         sx={{
                             position: "absolute",
-                            bottom: 10,
-                            right: 10,
+                            bottom: 32,
+                            right: 32,
                             color: "text.secondary",
                         }}
                     >
                         {isRotating ? "Stop Rotation" : "Auto Rotate"}
                     </Button>
+                    {showAlert && (
+                        <Alert
+                            severity="primary"
+                            onClose={handleCloseAlert}
+                            sx={{
+                                position: "absolute",
+                                top: 32,
+                                right: 32,
+                                boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                            }}
+                        >
+                            <Typography variant="body2">
+                                <strong>모델 조작 방법</strong>
+                                <br />
+                                • 좌클릭 + 드래그: 모델 회전
+                                <br />
+                                • 우클릭 + 드래그: 시점 이동
+                                <br />• 휠 스크롤: 줌 인/아웃
+                            </Typography>
+                        </Alert>
+                    )}
                 </Grid>
             </Grid>
         </Box>

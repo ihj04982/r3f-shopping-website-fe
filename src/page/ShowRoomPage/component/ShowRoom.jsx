@@ -135,8 +135,8 @@ const ShowRoom = ({ partColors, isRotating }) => {
             controls.setPosition(4, 1.5, 0, true);
             controls.setTarget(0, 0, 0, true);
         } else {
-            controls.setPosition(2, 2, 2, false);
-            controls.setTarget(0, 0, 0, false);
+            controls.setPosition(1.5, 1.5, 2, false);
+            controls.setTarget(-0.2, 0, 0, false);
         }
     }, [isRotating]);
 
