@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleLogin } from "@react-oauth/google";
-import { loginWithEmail } from "../../features/user/userSlice";
+import { loginWithEmail, loginWithGoogle } from "../../features/user/userSlice";
 import { clearErrors } from "../../features/user/userSlice";
 import { Container, TextField, Button, Alert, Box, Typography, Divider, Paper } from "@mui/material";
+import { showToastMessage } from "../../features/common/uiSlice";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const Login = () => {
     };
 
     const handleGoogleLogin = async (credentialResponse) => {
-        console.log(credentialResponse);
+        dispatch(loginWithGoogle(credentialResponse.credential));
     };
 
     if (user) {
@@ -99,7 +100,7 @@ const Login = () => {
                         <GoogleLogin
                             onSuccess={handleGoogleLogin}
                             onError={() => {
-                                console.log("Login Failed");
+                                dispatch(showToastMessage("Google 로그인에 실패했습니다.", "error"));
                             }}
                         />
                     </Box>

@@ -38,9 +38,9 @@ const Navbar = ({ user }) => {
     const [searchKeyword, setSearchKeyword] = useState("");
     const menuList = [
         { name: "ShowRoom", path: "/showroom" },
-        { name: "Glasses", path: "/" },
-        { name: "Sunglasses", path: "/" },
-        { name: "Accessories", path: "/" },
+        { name: "Glasses", path: "/?category=glasses" },
+        { name: "Sunglasses", path: "/?category=sunglasses" },
+        { name: "Accessories", path: "/?category=accessories" },
     ];
     let navigate = useNavigate();
 

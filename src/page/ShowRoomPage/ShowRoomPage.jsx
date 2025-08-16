@@ -83,7 +83,6 @@ const ShowRoomPage = () => {
                     </Box>
                 </Grid>
 
-                {/* 3D ShowRoom 영역 - 우측 (모바일에서는 상단) */}
                 <Grid size={{ xs: 12, md: 8 }}>
                     <Canvas
                         camera={{ position: [0, 2, 8], fov: 45 }}
@@ -99,6 +98,7 @@ const ShowRoomPage = () => {
                             background: "transparent",
                             width: "100%",
                             height: "100%",
+                            paddingLeft: 32,
                         }}
                     >
                         <Suspense fallback={null}>

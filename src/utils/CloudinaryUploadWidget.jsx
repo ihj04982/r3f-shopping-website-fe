@@ -13,7 +13,6 @@ class CloudinaryUploadWidget extends Component {
             },
             (error, result) => {
                 if (!error && result && result.event === "success") {
-                    console.log("Done! Here is the image info: ", result.info);
                     // DOM 요소를 직접 조작하는 대신 props로 전달된 콜백 함수만 호출
                     this.props.uploadImage(result.info.secure_url);
                 }

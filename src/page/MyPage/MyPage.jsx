@@ -10,7 +10,6 @@ import { logout } from "../../features/user/userSlice";
 const MyPage = () => {
     const dispatch = useDispatch();
     const { orderList, loading } = useSelector((state) => state.order);
-    console.log(orderList);
 
     useEffect(() => {
         dispatch(getOrder());

@@ -6,7 +6,6 @@ import { currencyFormat } from "../../../utils/number";
 const OrderReceipt = ({ cartList, totalPrice }) => {
     const location = useLocation();
     const navigate = useNavigate();
-    console.log(cartList);
 
     return (
         <Box

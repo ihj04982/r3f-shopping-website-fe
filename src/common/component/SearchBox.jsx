@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSearchParams } from "react-router-dom";
@@ -12,6 +12,10 @@ const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
             setSearchQuery({ ...searchQuery, page: 1, [field]: event.target.value });
         }
     };
+
+    useEffect(() => {
+        setKeyword(query.get(field) || "");
+    }, [query, field]);
 
     return (
         <TextField

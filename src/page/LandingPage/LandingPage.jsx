@@ -14,6 +14,7 @@ const LandingPage = () => {
     const { productList, loading } = useSelector((state) => state.product);
     const [query] = useSearchParams();
     const name = query.get("name");
+    const category = query.get("category");
     const [searchQuery, setSearchQuery] = useState({
         name: name || "",
     });
@@ -22,18 +23,27 @@ const LandingPage = () => {
         dispatch(
             getProductList({
                 name,
+                category,
             })
         );
-    }, [query]);
+    }, [dispatch, name, category]);
 
     useEffect(() => {
-        if (searchQuery.name === "") {
-            delete searchQuery.name;
+        const params = new URLSearchParams();
+
+        // 카테고리가 있으면 유지
+        if (category) {
+            params.set("category", category);
         }
-        const params = new URLSearchParams(searchQuery);
+
+        // 검색어가 있으면 추가
+        if (searchQuery.name && searchQuery.name !== "") {
+            params.set("name", searchQuery.name);
+        }
+
         const queryString = params.toString();
         navigate(`?${queryString}`);
-    }, [searchQuery]);
+    }, [searchQuery, category, navigate]);
 
     return (
         <Container maxWidth="lg">
@@ -61,8 +71,14 @@ const LandingPage = () => {
                     ) : (
                         <Grid size={{ xs: 12 }}>
                             <Box sx={{ textAlign: "center", py: 4 }}>
-                                <Typography variant="h4">
-                                    {name === "" ? "등록된 상품이 없습니다!" : `${name}과 일치한 상품이 없습니다!`}
+                                <Typography variant="h5">
+                                    {!name && !category
+                                        ? "등록된 상품이 없습니다!"
+                                        : category && !name
+                                        ? `${category} 카테고리에 등록된 상품이 없습니다!`
+                                        : name && !category
+                                        ? `${name}과 일치한 상품이 없습니다!`
+                                        : `${category} 카테고리에서 ${name}과 일치한 상품이 없습니다!`}
                                 </Typography>
                             </Box>
                         </Grid>
